@@ -1,5 +1,5 @@
 <?php
-	function sendCurlCall($url, $method, $headers $data=array()) {
+	function sendCurlCall($url, $method, $headers, $data=array()) {
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
