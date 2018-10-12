@@ -1,4 +1,5 @@
 <?php 
+error_reporting(E_ALL);
 require "CurlCall.php";
 
 include "RechargeAPI.php";
@@ -26,31 +27,24 @@ $subscriptionDetails = json_decode(file_get_contents('php://input'));
 
 // Get customer details from recharge 
 $customerId =  $subscriptionDetails->subscription->customer_id;
-	echo $customerId;
 $rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
-
 //Check if recharge have shopify customer id
 if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	//Read Requierd data from subscription details
  	$nextChargeDate = $subscriptionDetails->subscription->next_charge_scheduled_at; 
-    $creditAmount = $subscriptionDetails->subscription->price;
+    $creditAmount = $subscriptionDetails->subscription->price; 
    
 
 	// Get VIP Membership Details from db
 	$vipMemberDetails = $vipMembership->getVipMemberDetails($customerId);
-
 	$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
-
 	// get shopify customer details
 	$shopifyCustomerDetails = $shopifyApi->getCustomer($shopifyCustomerId);
-	
-	print_r($shopifyCustomerDetails);
-    
 	if ($vipMemberDetails) {
-		$creditAmount += $vipMemberDetails->credit_amount;
+		$creditAmount += $vipMemberDetails['credit_amount'];
 		$vipMembership->updateVipMemberDetails($customerId, $nextChargeDate, $creditAmount, 1);
     } else {
-    	$vipMembership->addVipMemberDetails($customerId, $shopifyCustomerId, $nextChargeDate, $credit);
+    	$vipMembership->addVipMemberDetails($customerId, $shopifyCustomerId, $nextChargeDate, $creditAmount);
     }
 
     // Set VIP tag to the customer
@@ -63,13 +57,9 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
         );
 	$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);
 	// Add entry in credit details table 
-	$vipMembership->updateCreditDetails($customerId, $creditAmount, $subscriptionDetails->subscription->price, 'credited');
+	$vipMembership->updateCreditDetails($customerId, $creditAmount, $subscriptionDetails->subscription->price, '1');
 	$vipMembership->addSubscriptionDetails($subscriptionDetails);
 
 } else {
 	echo "Customer Not Found";
 }
-
-
-
-
