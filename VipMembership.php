@@ -25,26 +25,36 @@ class VipMembership {
 
  	function updateVipMemberDetails($customerId, $nextChargeDate, $credit, $status) {
  		$sql = "UPDATE vip_members SET next_charge_scheduled_at = '".$nextChargeDate."', status = '".$status."', credit_amount = '".$credit."' WHERE customer_id = '".$customerId."'";
-    $result =  $this->conn->query($sql);
+    	$result =  $this->conn->query($sql);
  	}
 
  	function addSubscriptionDetails($subscriptionDetails) {
- 		$sql = "INSERT INTO subscriptions(next_charge_scheduled_at, address_id, customer_id, created_at, 
-                updated_at, cancelled_at, variant_title, shopify_product_id, shopify_variant_id, sku,
-                 charge_interval_frequency, cancellation_reason, cancellation_reason_comments, 
-                 order_day_of_week, order_day_of_month, max_retries_reached, has_queued_charges, properties, 
-                 product_title, price, quantity, status, order_interval_unit, expire_after_specific_number_of_charges)
-                 VALUES ( '".$subscriptionDetails->subscription->next_charge_scheduled_at."','".$subscriptionDetails->subscription->address_id."',
-                          '".$subscriptionDetails->subscription->customer_id."','".$subscriptionDetails->subscription->updated_at."',
-                          '".$subscriptionDetails->subscription->cancelled_at."','".$subscriptionDetails->subscription->product_title."',
-                          '".$subscriptionDetails->subscription->variant_title."','".$subscriptionDetails->subscription->quantity."',
-                          '".$subscriptionDetails->subscription->status."','".$subscriptionDetails->subscription->shopify_product_id."',
-                          '".$subscriptionDetails->subscription->shopify_variant_id."','".$subscriptionDetails->subscription->charge_interval_frequency."',
-                          '".$subscriptionDetails->subscription->cancellation_reason."','".$subscriptionDetails->subscription->cancellation_reason_comments."',
-                          '".$subscriptionDetails->subscription->order_day_of_week."','".$subscriptionDetails->subscription->order_day_of_month."',
-                          '".$subscriptionDetails->subscription->max_retries_reached."','".$subscriptionDetails->subscription->has_queued_charges."',
-                          '".$subscriptionDetails->subscription->properties."')";
-
+    	$sql = "INSERT INTO subscriptions(next_charge_scheduled_at, address_id, customer_id, created_at, updated_at, cancelled_at, variant_title, shopify_product_id, shopify_variant_id, sku, charge_interval_frequency, cancellation_reason, cancellation_reason_comments, order_day_of_week, order_day_of_month, max_retries_reached, has_queued_charges, properties, product_title, price, quantity, status, order_interval_unit, expire_after_specific_number_of_charges,order_interval_frequency)
+                 VALUES ( '".str_replace("T"," ",$subscriptionDetails->subscription->next_charge_scheduled_at)."',
+                          '".$subscriptionDetails->subscription->address_id."',
+                          '".$subscriptionDetails->subscription->customer_id."',
+                          '".str_replace("T"," ",$subscriptionDetails->subscription->created_at)."',
+                          '".str_replace("T"," ",$subscriptionDetails->subscription->updated_at)."',
+                          '2018-10-09 05:23:28',
+                          '".$subscriptionDetails->subscription->variant_title."',
+                          '".$subscriptionDetails->subscription->shopify_product_id."',
+                          '".$subscriptionDetails->subscription->shopify_variant_id."',
+                          '".$subscriptionDetails->subscription->sku."',
+                          '".$subscriptionDetails->subscription->charge_interval_frequency."',
+                          '".$subscriptionDetails->subscription->cancellation_reason."',
+                          '".$subscriptionDetails->subscription->cancellation_reason_comments."',
+                          '".$subscriptionDetails->subscription->order_day_of_week."',
+                          '".$subscriptionDetails->subscription->order_day_of_month."',
+                          '".$subscriptionDetails->subscription->max_retries_reached."',
+                          '".$subscriptionDetails->subscription->has_queued_charges."',
+                          '".$subscriptionDetails->subscription->properties."',
+                          '".$subscriptionDetails->subscription->product_title."',
+                          '".$subscriptionDetails->subscription->price."',
+                          '".$subscriptionDetails->subscription->quantity."',
+                          '1',
+                          '".$subscriptionDetails->subscription->order_interval_unit."',
+                          '30',
+                          '".$subscriptionDetails->subscription->order_interval_frequency."')";
         $result = $this->conn->query($sql);
  	}
 
