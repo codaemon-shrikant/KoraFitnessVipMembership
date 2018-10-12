@@ -64,6 +64,7 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);
 	// Add entry in credit details table 
 	$vipMembership->updateCreditDetails($customerId, $creditAmount, $subscriptionDetails->subscription->price, 'credited');
+	$vipMembership->addSubscriptionDetails($subscriptionDetails);
 
 } else {
 	echo "Customer Not Found";
