@@ -12,16 +12,14 @@ $rechargeApi = new RechargeApi();
 $genrateCoupon = new GenerateCoupon();
 $vipMembership = new VipMembership();
 
-$subscriptionDetails = json_decode('{"subscription": {"id": 24216075, "address_id": 18334491, "customer_id": 16401639, "created_at": "2018-10-09T05:23:27", "updated_at": "2018-10-09T05:23:28", 
+/*$subscriptionDetails = json_decode('{"subscription": {"id": 24216075, "address_id": 18334491, "customer_id": 16401639, "created_at": "2018-10-09T05:23:27", "updated_at": "2018-10-09T05:23:28", 
 "next_charge_scheduled_at": "2018-10-09T00:00:00", "cancelled_at": null, "product_title": "VIP Member  Auto renew", "variant_title": "", 
 "price": 0.01, "quantity": 1, "status": "ACTIVE", 
 "shopify_product_id": 1531595554927, "shopify_variant_id": 13659551989871, "sku": null, "order_interval_unit": "month", "order_interval_frequency": "1", 
 "charge_interval_frequency": "1", "cancellation_reason": null, "cancellation_reason_comments": null, "order_day_of_week": null, "order_day_of_month": 0, 
 "properties": [], "expire_after_specific_number_of_charges": null, "max_retries_reached": 0, "has_queued_charges": 1}}');
 
-$order_id = 1013;
-$defaultDiscountinPercentage = 30;
-$cartTotal = 200;
+
 
 // Shopify User Data
 /*
@@ -29,38 +27,40 @@ $cartTotal = 200;
 
 \/Customer\/741158289519","default_address":{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}}}
 */
+$order_id = $_GET['order_id'];
+$defaultDiscountinPercentage = $_GET['default_discount'];
+$cartTotal = $_GET['cart_total'];
+$customerId = $_GET['customer_id'];
 
-//$subscriptionDetails = file_get_contents('php://input');
+//$cartDetails = file_get_contents('php://input');
 
 // Get customer details from recharge 
-$customerId =  $subscriptionDetails->subscription->customer_id;
-$rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
+//$customerId =  $subscriptionDetails->subscription->customer_id;
+//$rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
 //Check if recharge have shopify customer id
 
-if($rechargeCustomerDetails->customer->shopify_customer_id) {
+if($customerId) {
 	//Read Requierd data from subscription details
-	$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
+	//$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
 
 	// Get  credit amount from db
- 	$creditAmount = $genrateCoupon->getCreditAmount($shopifyCustomerId);
+ 	$creditAmount = $genrateCoupon->getCreditAmount($customerId);
  	$amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
- 	$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
+ 	//$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
 
- 	if ($creditAmount < $remainingValueToPay) 
+ 	if ($creditAmount < $amountAfterDiscount) 
       { 
        
       	$creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
       	$totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
-        $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
-        $code = $generateCode['discount_code']['code'];
-        $price_rules = $shopifyApi->price_rules($code, $totalDiscount, $shopifyCustomerId);//generate price rules
-        $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
-        $rule_id = $price_rule_id->price_rule->id;//get price rule id
-        $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify
         
+        generateToken($totalDiscount, $shopifyCustomerId);
+        
+        
+
         $creditBalance = 0; //Remaining Balance
         $amount = $creditAmount; //Credit from db
-        $creditPercent = $amount * 100; //credit percent
+        $creditPercent = $creditDiscount;
 
         $vipMembership->updateCoupons($order_id, $code);
         $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
@@ -72,12 +72,8 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
       {  
         $amountToUseFromCredit = $amountAfterDiscount;
         $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
-        $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
-        $code = $generateCode['discount_code']['code'];
-        $price_rules = $shopifyApi->price_rules($code, $totalDiscount, $shopifyCustomerId);//generate price rules
-        $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
-        $rule_id = $price_rule_id->price_rule->id;//get price rule id
-        $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify
+        
+        generateToken($totalDiscount, $shopifyCustomerId);
 
         $creditBalance = $creditAmount - $amountToUseFromCredit; 
         $amount = $amountToUseFromCredit; //Credit from db
@@ -93,4 +89,14 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 
 } else {
 	echo "Customer Not Found";
+}
+
+funciton generateToken($totalDiscount, $shopifyCustomerId) {
+    $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
+        
+    $code = $generateCode['discount_code']['code'];
+    $price_rules = $shopifyApi->price_rules($code, $totalDiscount, $shopifyCustomerId);//generate price rules
+    $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
+    $rule_id = $price_rule_id->price_rule->id;//get price rule id
+    $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify
 }
