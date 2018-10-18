@@ -58,7 +58,7 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
         );
 	$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);
 	// Add entry in credit details table 
-	$vipMembership->updateCreditDetails($customerId, $creditAmount, $subscriptionDetails->subscription->price, '1');
+	$vipMembership->updateCreditDetails($shopifyCustomerId, $creditAmount, $subscriptionDetails->subscription->price, '1');
 	$vipMembership->addSubscriptionDetails($subscriptionDetails);
 
 } else {
