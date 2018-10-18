@@ -10,7 +10,7 @@ class VipMembership {
 		$this->conn = new mysqli($this->mysql_server, $this->mysql_username, $this->mysql_password,$this->mysql_database);
 		// Check connection
 		if ($this->conn->connect_error) {
-		    die("Connection failed" . $conn->connect_error);
+		    die("Connection failed" . $this->conn->connect_error);
 		} 
 	}	
 	function getVipMemberDetails($customerId) {
