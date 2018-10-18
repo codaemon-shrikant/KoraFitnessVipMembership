@@ -76,11 +76,11 @@ class VipMembership {
   {
     $data = 
               array(
-                "Coupon_code" => $code,
-                "Credit_used" => $amount,
-                "Credit_percent" => $creditPercent,
-                "Total_discount" => $totalDiscount,
-                "Remaining_credit" => $creditBalance
+                "coupon_code" => $code,
+                "credit_used" => $amount,
+                "credit_percent" => $creditPercent,
+                "total_discount" => $totalDiscount,
+                "remaining_credit" => $creditBalance
               );
     $jsonData = json_encode($data);
     return $jsonData;
