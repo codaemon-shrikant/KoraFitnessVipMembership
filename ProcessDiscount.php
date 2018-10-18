@@ -47,12 +47,14 @@ if($customerId) {
     $creditAmount = $vipMembership->getCreditAmount($customerId);
     $amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
     //$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
+
     if($creditAmount > 0) {
         if ($creditAmount < $amountAfterDiscount) 
           { 
             
             $creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
             $totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
+
             $code = generateToken($totalDiscount, $customerId);
             $creditBalance = 0; //Remaining Balance
             $amount = $creditAmount; //Credit from db
