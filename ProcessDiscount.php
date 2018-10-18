@@ -40,61 +40,66 @@ $customerId = $_GET['customer_id'];
 //Check if recharge have shopify customer id
 
 if($customerId) {
-	//Read Requierd data from subscription details
-	//$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
+    //Read Requierd data from subscription details
+    //$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
 
-	// Get  credit amount from db
- 	$creditAmount = $genrateCoupon->getCreditAmount($customerId);
- 	$amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
- 	//$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
+    // Get  credit amount from db
+    $creditAmount = $genrateCoupon->getCreditAmount($customerId);
+    $amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
+    //$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
+    if($creditAmount > 0) {
+        if ($creditAmount < $amountAfterDiscount) 
+          { 
+            
+            $creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
+            $totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
+            $code = generateToken($totalDiscount, $customerId);
+            $creditBalance = 0; //Remaining Balance
+            $amount = $creditAmount; //Credit from db
+            $creditPercent = $creditDiscount;
 
- 	if ($creditAmount < $amountAfterDiscount) 
-      { 
-       
-      	$creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
-      	$totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
-        
-        generateToken($totalDiscount, $shopifyCustomerId);
-    
-        $creditBalance = 0; //Remaining Balance
-        $amount = $creditAmount; //Credit from db
-        $creditPercent = $creditDiscount;
+            $vipMembership->updateCoupons($order_id, $code);
+            $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
+            $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
+            $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
+            print_r($jsonFormat);
+          } 
+        else 
+          {  
+            $amountToUseFromCredit = $amountAfterDiscount;
+            $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
+            
+            $code =  generateToken($totalDiscount, $customerId);
+            
+            $creditBalance = $creditAmount - $amountToUseFromCredit; 
+            $amount = $amountToUseFromCredit; //Credit from db
+            $creditPercent = $amount * 100;
 
-        $vipMembership->updateCoupons($order_id, $code);
-        $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
-        $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
-        $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
-        print_r($jsonFormat);
-      } 
-    else 
-      {  
-        $amountToUseFromCredit = $amountAfterDiscount;
-        $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
-        
-        generateToken($totalDiscount, $shopifyCustomerId);
+            $vipMembership->updateCoupons($order_id, $code);
+            $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
+            $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
 
-        $creditBalance = $creditAmount - $amountToUseFromCredit; 
-        $amount = $amountToUseFromCredit; //Credit from db
-        $creditPercent = $amount * 100;
-
-        $vipMembership->updateCoupons($order_id, $code);
-        $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
-        $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
-
-        $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
-        print_r($jsonFormat);
-       }
+            $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
+            print_r($jsonFormat);
+        }
+    } else {
+        $jsonFormat = $vipMembership->jsonFormat(null, 0, 0, $defaultDiscountinPercentage, $creditAmount);
+            print_r($jsonFormat);
+    }
 
 } else {
-	echo "Customer Not Found";
+    echo "Customer Not Found";
 }
 
 function generateToken($totalDiscount, $shopifyCustomerId) {
+    global $shopifyApi;
+        
     $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
         
     $code = $generateCode['discount_code']['code'];
     $price_rules = $shopifyApi->price_rules($code, $totalDiscount, $shopifyCustomerId);//generate price rules
     $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
     $rule_id = $price_rule_id->price_rule->id;//get price rule id
-    $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify
+    $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify'
+    return $code;
 }
