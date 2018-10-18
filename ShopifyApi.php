@@ -60,4 +60,97 @@ class ShopifyApi {
         $curl = new CurlCall($url, $method, $headers, $data);
         return $curl->execute();
     }
+    function generate_code($totalDiscount)
+      {
+        $code = "VIPCUSTOMER" . "$totalDiscount" . "OFF";
+        $discount_code = array (
+            'discount_code' =>
+            array(
+             'code' => $code,
+            )
+          );
+        return $discount_code;
+      }
+    function price_rules($code, $totalDiscount)
+      {
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+       $price_rule = array (
+        'price_rule' =>
+              array(
+                "title" => $code,
+                "target_type" => "line_item",
+                "target_selection" => "all",
+                "allocation_method" => "across",
+                "value_type" => "percentage",
+                "value" => -$totalDiscount,
+                "customer_selection" => "all",
+                "starts_at" => "2018-10-01T17:59:10Z"
+              )
+            );
+        return $price_rule;
+      }
+      function price_rule_id($price_rules)
+      {
+        $url = $this->shopifyBaseURL. "/admin/price_rules.json";
+        $method = 'POST';
+
+        $data = $price_rules;
+
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+
+        $curl = new CurlCall($url, $method, $headers, $data);
+        return $curl->execute();
+      }
+      
+    function createDiscount($generateCode, $rule_id)
+    {
+        //url to apply generate coupon
+        $url = $this->shopifyBaseURL . "/admin/price_rules/" .$rule_id. "/" ."discount_codes.json";
+        $method = 'POST';
+
+        $data = $generateCode;
+
+        //set headers
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+
+        $curl = new CurlCall($url, $method, $headers, $data);
+        return $curl->execute();
+    }
+    function send_invite($email, $customerId)
+    {
+        //url to apply generate coupon
+        $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/" ."send_invite.json";
+
+        $customer_invite = array (
+        'customer_invite' =>
+              array(
+                "to" => "monika.bagadkar@codaemonsoftwares.com",
+                "from" => "monika541992@gmail.com",
+                "subject" => "Welcome to my new shop",
+                "custom_message" => "My awesome new store"
+              )
+            );
+
+        $data = json_encode($customer_invite);
+        $method = 'PUT';
+
+        //set headers
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+
+        $curl = new CurlCall($url, $method, $headers, $data);echo "<pre>";print_r($curl);
+        $curl->execute();
+    }
+
 }
