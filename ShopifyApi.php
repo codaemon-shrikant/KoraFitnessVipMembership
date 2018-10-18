@@ -125,7 +125,7 @@ class ShopifyApi {
         $curl = new CurlCall($url, $method, $headers, $data);
         return $curl->execute();
     }
-    function send_invite($email, $customerId)
+   /* function send_invite($email, $customerId)
     {
         //url to apply generate coupon
         $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/" ."send_invite.json";
@@ -151,6 +151,6 @@ class ShopifyApi {
 
         $curl = new CurlCall($url, $method, $headers, $data);echo "<pre>";print_r($curl);
         $curl->execute();
-    }
+    }*/
 
 }
