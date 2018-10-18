@@ -44,7 +44,7 @@ if($customerId) {
     //$shopifyCustomerId = $rechargeCustomerDetails->customer->shopify_customer_id;
 
     // Get  credit amount from db
-    $creditAmount = $genrateCoupon->getCreditAmount($customerId);
+    $creditAmount = $vipMembership->getCreditAmount($customerId);
     $amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
     //$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
     if($creditAmount > 0) {
