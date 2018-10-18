@@ -89,7 +89,7 @@ if($customerId) {
 	echo "Customer Not Found";
 }
 
-funciton generateToken($totalDiscount, $shopifyCustomerId) {
+function generateToken($totalDiscount, $shopifyCustomerId) {
     $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
         
     $code = $generateCode['discount_code']['code'];
