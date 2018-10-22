@@ -2,8 +2,8 @@
 class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
-	private $mysql_password = "9VhDB'/L";
-	private $mysql_database = "koraVipMembership";
+	private $mysql_password = "root";
+	private $mysql_database = "korafitness";
 	private $conn;
 	function __construct(){
 		// Create connection
@@ -27,8 +27,9 @@ class VipMembership {
  		$sql = "UPDATE vip_members SET next_charge_scheduled_at = '".$nextChargeDate."', status = '".$status."', credit_amount = '".$credit."' WHERE customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
  	}
-  function updateVipMemberCredit($customerId, $creditBalance) {
-    $sql = "UPDATE vip_members SET credit_amount = '".$creditBalance."' WHERE customer_id = '".$customerId."'";
+  function updateVipMemberCredit($customerId, $amountRemaining) {
+
+    $sql = "UPDATE vip_members SET credit_amount = '".$amountRemaining."' WHERE customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
  	function addSubscriptionDetails($subscriptionDetails) {
@@ -63,13 +64,17 @@ class VipMembership {
 
       $result = $this->conn->query($sql);
  	}
-
+  function insertCoupon($order_id, $code, $customerId, $totalDiscount, $amount)
+  {
+    $sql = "INSERT INTO coupon(shopify_customer_id, order_id, code, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$order_id."', '".$code."', '".$totalDiscount."', '".$credit_used."' , 1 ,'1','1','11','1','1','1','2018-10-12 17:26:35','2018-10-12 17:26:35')";
+    $result = $this->conn->query($sql);
+  }
  	function updateCoupons($order_id, $code) {
     $sql = "UPDATE coupon SET code = '".$code."' WHERE order_id = '".$order_id."'";
     $result =  $this->conn->query($sql);
  	}
- 	function updateCreditDetails($customerId, $remainingBalancecreditBalance, $amount, $status) {
- 		$sql = "INSERT INTO credits(customer_id, credit_balance, amount_used, status) VALUES ('".$customerId."', '".$creditBalance."', '".$amount."' ,'".$status."')";
+ 	function updateCredit($customerId, $creditUsed, $creditAmount) {
+ 		$sql = "UPDATE credits SET amount_used = '".$creditUsed."',credit_balance = '".$creditAmount."',status = 0 WHERE customer_id = '".$customerId."'";
 		$result = $this->conn->query($sql);
  	}
   function jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance)
@@ -85,12 +90,34 @@ class VipMembership {
     $jsonData = json_encode($data);
     return $jsonData;
   }
-  function getCreditAmount($shopifyCustomerId) {
-    $sql = "SELECT credit_amount FROM vip_members WHERE shopify_customer_id = '".$shopifyCustomerId."' limit 1";
+  function getCreditAmount($customerId) {
+    $sql = "SELECT credit_amount FROM vip_members WHERE customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
     return $data['credit_amount'];
   }
-  
+  function checkCoupon($orderId, $customerId, $status, $couponCode)
+  {
+    $sql = "SELECT * FROM coupon WHERE shopify_customer_id = '".$customerId."' AND code = '".$couponCode."' limit 1";
+    $result = $this->conn->query($sql);
+    $data = $result->fetch_assoc();
+    if ($data > 0) 
+    {
+      $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE shopify_customer_id = '".$customerId."'";
+      $result =  $this->conn->query($sql);
+    }
+    else
+    {
+      echo "Invalid Coupon";
+    }
+  }
+   function getAmountFromCoupon($customerId)
+  {
+    $sql = "SELECT credit_used FROM coupon WHERE shopify_customer_id = '".$customerId."' limit 1";
+    $result = $this->conn->query($sql);
+    $data = $result->fetch_assoc();
+    return $data['credit_used'];
+  }
+
 }
 ?>
