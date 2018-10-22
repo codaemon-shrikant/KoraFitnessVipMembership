@@ -47,7 +47,8 @@ if($customerId) {
     $creditAmount = $vipMembership->getCreditAmount($customerId);
     $amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
     //$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
-
+    echo "<br>Credit Amount = ".$creditAmount;
+    echo "<br>Customer id = ".$customer_id;
     if($creditAmount > 0) {
         if ($creditAmount < $amountAfterDiscount) 
           { 
@@ -61,8 +62,8 @@ if($customerId) {
             $creditPercent = $creditDiscount;
 
             $vipMembership->updateCoupons($order_id, $code);
-            $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
-            $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
+            //$vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
+           // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
             $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
             print_r($jsonFormat);
           } 
@@ -78,8 +79,8 @@ if($customerId) {
             $creditPercent = $amount * 100;
 
             $vipMembership->updateCoupons($order_id, $code);
-            $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
-            $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
+           // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
+           // $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
 
             $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
             print_r($jsonFormat);

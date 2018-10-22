@@ -91,7 +91,7 @@ class VipMembership {
     return $jsonData;
   }
   function getCreditAmount($customerId) {
-    $sql = "SELECT credit_amount FROM vip_members WHERE customer_id = '".$customerId."' limit 1";
+    $sql = "SELECT credit_amount FROM vip_members WHERE shopify_customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
     return $data['credit_amount'];
