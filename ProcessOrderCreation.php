@@ -12,38 +12,7 @@ $rechargeApi = new RechargeApi();
 $genrateCoupon = new GenerateCoupon();
 $vipMembership = new VipMembership();
 
-$orderDetails = json_decode('{"orders": 
-    {
-      "id": 450789469,
-      "email": "bob.norman@hostmail.com",
-      "token": "b1946ac92492d2347c6235b4d2611184",
-  		"discount_applications": 
-	        {
-	          "type": "discount_code",
-	          "value": "100",
-	          "value_type": "amount",
-	          "allocation_method": "across",
-	          "target_selection": "all",
-	          "target_type": "line_item",
-	          "code": "VIPCUSTOMER100OFF"
-	        },
-        "fulfillments": 
-	      {
-	        "id": 255858046,
-	        "order_id": 450789469,
-	        "status": "success",
-		    "processing_method": "direct",
-		    "checkout_id": 901414060
-	  	  },
-	  	   "customer": 
-	  	   {
-	  	   	"default_address":
-	  	   	 {
-		        "id": 207119551,
-		        "customer_id": 207119551
-		  	 }
-	  	   }
-  	}}');
+$orderDetails = file_get_contents('php://input');
 
 	$orderId = $orderDetails->orders->id;
 	$customerId = $orderDetails->orders->customer->default_address->customer_id;
