@@ -74,7 +74,7 @@ if($customerId) {
             
             $creditBalance = $creditAmount - $amountToUseFromCredit; 
             $amount = $amountToUseFromCredit; //Credit from db
-            $creditPercent = $amount * 100;
+            $creditPercent = ($amount/$cartTotal) * 100;
 
             $vipMembership->updateCoupons($order_id, $code);
            // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
