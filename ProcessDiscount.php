@@ -47,8 +47,6 @@ if($customerId) {
     $creditAmount = $vipMembership->getCreditAmount($customerId);
     $amountAfterDiscount = $genrateCoupon->calculateDiscount($defaultDiscountinPercentage, $cartTotal);//calculate amount after default discount
     //$remainingValueToPay = abs($creditAmount - $amountAfterDiscount);
-    echo "<br>Credit Amount = ".$creditAmount;
-    echo "<br>Customer id = ".$customer_id;
     if($creditAmount > 0) {
         if ($creditAmount < $amountAfterDiscount) 
           { 
