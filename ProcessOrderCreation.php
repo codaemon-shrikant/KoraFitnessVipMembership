@@ -14,10 +14,10 @@ $vipMembership = new VipMembership();
 
 $orderDetails = file_get_contents('php://input');
 
-	$orderId = $orderDetails->orders->id;
-	$customerId = $orderDetails->orders->customer->default_address->customer_id;
-	$status = $orderDetails->orders->fulfillments->status;
-	$couponCode = $orderDetails->orders->discount_applications->code;
+	$orderId = $orderDetails->id;
+	$customerId = $orderDetails->customer->default_address->customer_id;
+	$status = $orderDetails->fulfillments->status;
+	$couponCode = $orderDetails->discount_applications->code;
 
 	$vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
 
