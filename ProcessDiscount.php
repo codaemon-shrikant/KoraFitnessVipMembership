@@ -54,7 +54,8 @@ if($customerId) {
             $creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
             $totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
 
-            $code = generateToken($totalDiscount, $customerId);
+            $createCoupon = generateToken($totalDiscount, $customerId);
+            $code = $createCoupon->code;
             $creditBalance = 0; //Remaining Balance
             $amount = $creditAmount; //Credit from db
             $creditPercent = $creditDiscount;
@@ -70,8 +71,8 @@ if($customerId) {
             $amountToUseFromCredit = $amountAfterDiscount;
             $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
             
-            $code =  generateToken($totalDiscount, $customerId);
-            
+            $createCoupon =  generateToken($totalDiscount, $customerId);
+            $code = $createCoupon->code;
             $creditBalance = $creditAmount - $amountToUseFromCredit; 
             $amount = $amountToUseFromCredit; //Credit from db
             $creditPercent = ($amount/$cartTotal) * 100;
@@ -102,5 +103,5 @@ function generateToken($totalDiscount, $shopifyCustomerId) {
     $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
     $rule_id = $price_rule_id->price_rule->id;//get price rule id
     $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify'
-    return $code;
+    return $createCoupon;
 }
