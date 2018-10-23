@@ -4,23 +4,24 @@ require "CurlCall.php";
 
 include "RechargeAPI.php";
 include "ShopifyApi.php";
-include "GenerateCoupon.php";
 include "VipMembership.php";
 
 $shopifyApi = new shopifyApi();
 $rechargeApi = new RechargeApi();
-$genrateCoupon = new GenerateCoupon();
 $vipMembership = new VipMembership();
 
+
 $orderDetails = file_get_contents('php://input');
-$file_handle = fopen('my_filename.json', 'w');
-    fwrite($file_handle, $orderDetails);
-    fclose($file_handle);
 
 	$orderId = $orderDetails->id;
 	$customerId = $orderDetails->customer->id;
 	$status = $orderDetails->fulfillments->status;
 	$couponCode = $orderDetails->discount_codes->0->code;
+
+
+	$file_handle = fopen('my_filename.json', 'w');
+    fwrite($file_handle, $orderId. " + ".$customerId." + ".$couponCode);
+    fclose($file_handle);
 
 	$vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
 
