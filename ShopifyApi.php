@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL);
 class ShopifyApi {
 	private $shop = "korafitness-dev";
     private $apiKey = "acac9a7e911be70b12ca8c6f4c2c5311";
@@ -125,32 +125,29 @@ class ShopifyApi {
         $curl = new CurlCall($url, $method, $headers, $data);
         return $curl->execute();
     }
-   /* function send_invite($email, $customerId)
+   function send_invite($customerId, $customerEmail)
     {
         //url to apply generate coupon
-        $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/" ."send_invite.json";
-
-        $customer_invite = array (
+        $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/send_invite.json";
+        $customer_invite = array(
         'customer_invite' =>
               array(
-                "to" => "monika.bagadkar@codaemonsoftwares.com",
+                "to" => $customerEmail,
                 "from" => "monika541992@gmail.com",
                 "subject" => "Welcome to my new shop",
                 "custom_message" => "My awesome new store"
               )
             );
-
-        $data = json_encode($customer_invite);
-        $method = 'PUT';
+        $data = $customer_invite;
+        $method = 'POST';
 
         //set headers
         $headers = array(
             'APIKEY: '.$this->apiKey,
             'Content-Type: application/json',
          );
-
-        $curl = new CurlCall($url, $method, $headers, $data);echo "<pre>";print_r($curl);
-        $curl->execute();
-    }*/
+        $curl = new CurlCall($url, $method, $headers, $data);
+        return $curl->execute();
+    }
 
 }
