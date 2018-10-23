@@ -13,11 +13,14 @@ $genrateCoupon = new GenerateCoupon();
 $vipMembership = new VipMembership();
 
 $orderDetails = file_get_contents('php://input');
+$file_handle = fopen('my_filename.json', 'w');
+    fwrite($file_handle, $orderDetails);
+    fclose($file_handle);
 
 	$orderId = $orderDetails->id;
-	$customerId = $orderDetails->customer->default_address->customer_id;
+	$customerId = $orderDetails->customer->id;
 	$status = $orderDetails->fulfillments->status;
-	$couponCode = $orderDetails->discount_applications->code;
+	$couponCode = $orderDetails->discount_codes->0->code;
 
 	$vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
 

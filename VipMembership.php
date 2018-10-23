@@ -99,9 +99,7 @@ class VipMembership {
   function checkCoupon($orderId, $customerId, $status, $couponCode)
   {
     $sql = "SELECT * FROM coupon WHERE shopify_customer_id = '".$customerId."' AND code = '".$couponCode."' limit 1";
-    $file_handle = fopen('my_filename.json', 'w');
-    fwrite($file_handle, $sql);
-    fclose($file_handle);
+    
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
     if ($data > 0) 
