@@ -27,7 +27,7 @@ header("Access-Control-Allow-Origin: *");
 
 \/Customer\/741158289519","default_address":{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}}}
 */
-$order_id = $_GET['order_id'];
+$order_id = null;
 $defaultDiscountinPercentage = $_GET['default_discount'];
 $cartTotal = $_GET['cart_total']/100;
 $customerId = $_GET['customer_id'];
