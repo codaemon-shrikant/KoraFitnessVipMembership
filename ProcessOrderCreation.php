@@ -11,7 +11,7 @@ $rechargeApi = new RechargeApi();
 $vipMembership = new VipMembership();
 
 
-$orderDetails = file_get_contents('php://input');
+$orderDetails = json_decode(file_get_contents('php://input'));
 
 	$orderId = $orderDetails->id;
 	$customerId = $orderDetails->customer->id;
