@@ -55,6 +55,7 @@ if($customerId) {
             $totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
 
             $createCoupon = generateToken($totalDiscount, $customerId);
+            echo $createCoupon;
             $code = $createCoupon->code;
             $creditBalance = 0; //Remaining Balance
             $amount = $creditAmount; //Credit from db
@@ -72,6 +73,7 @@ if($customerId) {
             $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
             
             $createCoupon =  generateToken($totalDiscount, $customerId);
+            echo $createCoupon;
             $code = $createCoupon->code;
             $creditBalance = $creditAmount - $amountToUseFromCredit; 
             $amount = $amountToUseFromCredit; //Credit from db
