@@ -60,9 +60,9 @@ class ShopifyApi {
         $curl = new CurlCall($url, $method, $headers, $data);
         return $curl->execute();
     }
-    function generate_code($totalDiscount)
+    function generate_code($totalDiscount,$customerId)
       {
-        $code = "VIPCUSTOMER" . "$totalDiscount" . "OFF";
+        $code = "VIP_" . time(). "_$totalDiscount_" . "OFF";
         $discount_code = array (
             'discount_code' =>
             array(

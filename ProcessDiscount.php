@@ -95,7 +95,7 @@ if($customerId) {
 function generateToken($totalDiscount, $shopifyCustomerId) {
     global $shopifyApi;
         
-    $generateCode = $shopifyApi->generate_code($totalDiscount);//generate coupon code for tottal discount
+    $generateCode = $shopifyApi->generate_code($totalDiscount, $shopifyCustomerId);//generate coupon code for tottal discount
         
     $code = $generateCode['discount_code']['code'];
     $price_rules = $shopifyApi->price_rules($code, $totalDiscount, $shopifyCustomerId);//generate price rules
