@@ -16,7 +16,7 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 	$orderId = $orderDetails->id;
 	$customerId = $orderDetails->customer->id;
 	$status = $orderDetails->fulfillments->status;
-	$couponCode = $orderDetails->discount_codes->0->code;
+	$couponCode = $orderDetails->discount_codes[0]->code;
 
 
 	$file_handle = fopen('my_filename.json', 'w');
