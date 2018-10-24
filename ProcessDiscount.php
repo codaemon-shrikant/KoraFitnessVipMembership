@@ -59,7 +59,7 @@ if($customerId) {
             $amount = $creditAmount; //Credit from db
             $creditPercent = $creditDiscount;
 
-            $vipMembership->insertCoupon($order_id, $code, $customerId, $totalDiscount, $amount);
+            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount);
             //$vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
            // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
             $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
@@ -76,7 +76,7 @@ if($customerId) {
             $amount = $amountToUseFromCredit; //Credit from db
             $creditPercent = ($amount/$cartTotal) * 100;
 
-            $vipMembership->insertCoupon($order_id, $code, $customerId, $totalDiscount, $amount);
+            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount);
            // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
            // $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
 
