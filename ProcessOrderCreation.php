@@ -21,7 +21,7 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 
 
 	$file_handle = fopen('my_filename.json', 'w');
-    fwrite($file_handle, $orderDetails ."\r\n".$orderId. " + ".$customerId." + ".$couponCode);
+    fwrite($file_handle, $orderId. " + ".$customerId." + ".$couponCode);
     fclose($file_handle);
 
 	//$data = $vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
