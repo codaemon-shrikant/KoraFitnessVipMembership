@@ -1,14 +1,15 @@
 <?php
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require "CurlCall.php";
 
 include "RechargeAPI.php";
 include "ShopifyApi.php";
-//include "VipMembership.php";
+include "VipMembership.php";
 
 $shopifyApi = new shopifyApi();
 $rechargeApi = new RechargeApi();
-//$vipMembership = new VipMembership();
+$vipMembership = new VipMembership();
 
 
 $orderDetails = json_decode(file_get_contents('php://input'));
