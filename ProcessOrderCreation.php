@@ -23,15 +23,17 @@ $orderDetails = json_decode(file_get_contents('php://input'));
     fwrite($file_handle, $orderId. " + ".$customerId." + ".$couponCode);
     fclose($file_handle);
 
-	$vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
+	$data = $vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
 
-	$creditUsed = $vipMembership->getAmountFromCoupon($customerId);//amount from coupon table
+	$vipMembership->updateOrderIDinCoupon($data->id, $data->order_id) 
+
+	$creditUsed = $data->credit_used;//amount from coupon table
 	
 	$creditAmount = $vipMembership->getCreditAmount($customerId);//get credit from db
 	
 	$amountRemaining = $creditAmount - $creditUsed;
 	
-	$vipMembership->updateCredit($customerId, $creditUsed, $amountRemaining); //update credit
+	$vipMembership->insertCredit($customerId, $amountRemaining, $creditUsed, '0'); //update credit
 
 	$vipMembership->updateVipMemberCredit($customerId, $amountRemaining);//update amount in vipmember table
 	

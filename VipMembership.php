@@ -64,16 +64,18 @@ class VipMembership {
 
       $result = $this->conn->query($sql);
  	}
+  function insertCredit($customerId, $creditBalance, $amount, $status) {
+      $sql = "INSERT INTO credits(customer_id, credit_balance, amount_used, status) VALUES ('".$customerId."', '".$creditBalance."', '".$amount."' ,'".$status."')";
+      $result = $this->conn->query($sql);
+  }
+
   function insertCoupon($order_id, $code, $customerId, $totalDiscount, $amount)
   {
-    echo $sql = "INSERT INTO coupon(shopify_customer_id, code, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$code."', '".$totalDiscount."', '".$amount."' , 1 ,'1','1','11','1','1','1','2018-10-12 17:26:35','2018-10-12 17:26:35')";
+    $sql = "INSERT INTO coupon(shopify_customer_id, order_id, code, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$order_id."', '".$code."', '".$totalDiscount."', '".$credit_used."' , 1 ,'1','1','11','1','1','1','2018-10-12 17:26:35','2018-10-12 17:26:35')";
     $result = $this->conn->query($sql);
   }
- 	function updateCoupons($order_id, $code) {
-    $sql = "UPDATE coupon SET code = '".$code."' WHERE order_id = '".$order_id."'";
-    $result =  $this->conn->query($sql);
- 	}
- 	function updateCredit($customerId, $creditUsed, $creditAmount) {
+ 	
+  function updateCredit($customerId, $creditUsed, $creditAmount) {
  		$sql = "UPDATE credits SET amount_used = '".$creditUsed."',credit_balance = '".$creditAmount."',status = 0 WHERE customer_id = '".$customerId."'";
 		$result = $this->conn->query($sql);
  	}
@@ -102,17 +104,14 @@ class VipMembership {
     
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
-    if ($data) 
-    {
-      $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE id = '".$data->id."'";
-      $result =  $this->conn->query($sql);
-    }
-    else
-    {
-      echo "Invalid Coupon";
-    }
+    return $data;
   }
-   function getAmountFromCoupon($customerId)
+  function updateOrderIDinCoupon($id, $orderId) {
+    $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE id = '".$id."'";
+    $result =  $this->conn->query($sql);
+  }
+  
+  function getAmountFromCoupon($customerId)
   {
     $sql = "SELECT credit_used FROM coupon WHERE shopify_customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
