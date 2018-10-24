@@ -98,7 +98,7 @@ class VipMembership {
     $data = $result->fetch_assoc();
     return $data['credit_amount'];
   }
-  function checkCoupon($orderId, $customerId, $status, $couponCode)
+  function checkCoupon($customerId, $couponCode)
   {
     $sql = "SELECT * FROM coupon WHERE shopify_customer_id = '".$customerId."' AND code = '".$couponCode."' limit 1";
     
@@ -107,7 +107,7 @@ class VipMembership {
     return $data;
   }
   function updateOrderIDinCoupon($id, $orderId) {
-    $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE id = '".$id."'";
+    echo $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE id = '".$id."'";
     $result =  $this->conn->query($sql);
   }
   

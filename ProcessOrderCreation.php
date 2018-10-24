@@ -19,9 +19,14 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 	$status = $orderDetails->fulfillments->status;
 	$couponCode = $orderDetails->discount_codes[0]->code;
 
-	$data = $vipMembership->checkCoupon($orderId, $customerId, $status, $couponCode);//check coupon from db and webhook response
 
-	$vipMembership->updateOrderIDinCoupon($data->id, $orderId); 
+	$file_handle = fopen('my_filename.json', 'w');
+    fwrite($file_handle, $orderId. " + ".$customerId." + ".$couponCode);
+    fclose($file_handle);
+
+	$data = $vipMembership->checkCoupon($customerId, $couponCode);//check coupon from db and webhook response
+
+	$vipMembership->updateOrderIDinCoupon($data->id, $orderId);
 
 	$creditUsed = $data->credit_used;//amount from coupon table
 	
