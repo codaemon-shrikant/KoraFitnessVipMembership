@@ -29,7 +29,7 @@ class VipMembership {
  	}
   function updateVipMemberCredit($customerId, $amountRemaining) {
 
-    $sql = "UPDATE vip_members SET credit_amount = '".$amountRemaining."' WHERE customer_id = '".$customerId."'";
+    $sql = "UPDATE vip_members SET credit_amount = '".$amountRemaining."' WHERE shopify_customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
  	function addSubscriptionDetails($subscriptionDetails) {
