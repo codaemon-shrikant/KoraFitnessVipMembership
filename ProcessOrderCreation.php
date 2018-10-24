@@ -37,6 +37,5 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 	$vipMembership->insertCredit($customerId, $amountRemaining, $creditUsed, '0'); //update credit
 
 	$vipMembership->updateVipMemberCredit($customerId, $amountRemaining);//update amount in vipmember table
-*/	
 
 ?>
