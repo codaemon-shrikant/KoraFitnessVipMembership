@@ -4,11 +4,11 @@ require "CurlCall.php";
 
 include "RechargeAPI.php";
 include "ShopifyApi.php";
-include "VipMembership.php";
+//include "VipMembership.php";
 
 $shopifyApi = new shopifyApi();
 $rechargeApi = new RechargeApi();
-$vipMembership = new VipMembership();
+//$vipMembership = new VipMembership();
 
 
 $orderDetails = json_decode(file_get_contents('php://input'));
@@ -30,7 +30,7 @@ $file_handle = fopen('my_filename.json', 'w');
 fwrite($file_handle, json_encode($data));
 fclose($file_handle);
 */
-	$vipMembership->updateOrderIDinCoupon($data->id, $data->order_id) 
+/*	$vipMembership->updateOrderIDinCoupon($data->id, $data->order_id) 
 
 	$creditUsed = $data->credit_used;//amount from coupon table
 	
@@ -41,6 +41,6 @@ fclose($file_handle);
 	$vipMembership->insertCredit($customerId, $amountRemaining, $creditUsed, '0'); //update credit
 
 	$vipMembership->updateVipMemberCredit($customerId, $amountRemaining);//update amount in vipmember table
-	
+*/	
 
 ?>
