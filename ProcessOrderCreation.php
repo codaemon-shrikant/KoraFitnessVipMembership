@@ -29,9 +29,10 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 	
 	$creditAmount = $vipMembership->getCreditAmount($customerId);//get credit from db
 	
-	$vipMembership->updateCredit($customerId, $creditUsed, $creditAmount); //update credit
-
 	$amountRemaining = $creditAmount - $creditUsed;
+	
+	$vipMembership->updateCredit($customerId, $creditUsed, $amountRemaining); //update credit
+
 	$vipMembership->updateVipMemberCredit($customerId, $amountRemaining);//update amount in vipmember table
 	
 

@@ -66,7 +66,7 @@ class VipMembership {
  	}
   function insertCoupon($order_id, $code, $customerId, $totalDiscount, $amount)
   {
-    $sql = "INSERT INTO coupon(shopify_customer_id, code, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$code."', '".$totalDiscount."', '".$amount."' , 1 ,'1','1','11','1','1','1','2018-10-12 17:26:35','2018-10-12 17:26:35')";
+    echo $sql = "INSERT INTO coupon(shopify_customer_id, code, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$code."', '".$totalDiscount."', '".$amount."' , 1 ,'1','1','11','1','1','1','2018-10-12 17:26:35','2018-10-12 17:26:35')";
     $result = $this->conn->query($sql);
   }
  	function updateCoupons($order_id, $code) {
@@ -102,9 +102,9 @@ class VipMembership {
     
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
-    if ($data > 0) 
+    if ($data) 
     {
-      $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE shopify_customer_id = '".$customerId."'";
+      $sql = "UPDATE coupon SET order_id = '".$orderId."' WHERE id = '".$data->id."'";
       $result =  $this->conn->query($sql);
     }
     else
