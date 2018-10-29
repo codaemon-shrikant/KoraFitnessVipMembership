@@ -11,6 +11,9 @@ $rechargeApi = new RechargeApi();
 $vipMembership = new VipMembership();
 
 $chargeDetails = json_decode(file_get_contents('php://input'));
+$file_handle = fopen('my_filename.json', 'w');
+fwrite($file_handle, $chargeDetails);
+fclose($file_handle);
 /*$chargeDetails = json_decode('{  
    "charge":{  
       "address_id":19248493,
@@ -76,7 +79,7 @@ $shopifyCustomerId = $vipMemberDetails['shopify_customer_id'];
 $subscriptionDetails = $rechargeApi->getSubscriptionDetails($subscriptionId);//subscription details from recharge
 
 
-$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, $chargeDetails->charge->status, str_replace("T"," ",$chargeDetails->charge->created_at) , str_replace("T"," ",$chargeDetails->charge->updated_at));//add charge details in db
+$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails,  $chargeDetails->charge->id, $chargeDetails->charge->status, str_replace("T"," ",$chargeDetails->charge->created_at) , str_replace("T"," ",$chargeDetails->charge->updated_at));//add charge details in db
 $nextChargeDate = $subscriptionDetails->subscription->next_charge_scheduled_at;
 
 $customerDetails = $shopifyApi->getCustomer($shopifyCustomerId);
