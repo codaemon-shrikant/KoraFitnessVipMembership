@@ -12,8 +12,7 @@ $vipMembership = new VipMembership();
 
 $chargeDetails = json_decode(file_get_contents('php://input'));
 $file_handle = fopen('my_filename.json', 'w');
-fwrite($file_handle, "Hi");
-fclose($file_handle);
+
 /*$chargeDetails = json_decode('{  
    "charge":{  
       "address_id":19248493,
@@ -73,6 +72,8 @@ fclose($file_handle);
 $subscriptionId = $chargeDetails->charge->line_items[0]->subscription_id;//subscription_id from charge paid response. 
 
 $rechargeCustomerId = $chargeDetails->charge->customer_id;
+fwrite($file_handle, $rechargeCustomerId ." ".$subscriptionId);
+fclose($file_handle);
 $vipMemberDetails = $vipMembership->getVipMemberDetails($rechargeCustomerId);
 $shopifyCustomerId = $vipMemberDetails['shopify_customer_id'];
 $subscriptionDetails = $rechargeApi->getSubscriptionDetails($subscriptionId);//subscription details from recharge
