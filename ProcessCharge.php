@@ -12,7 +12,7 @@ $vipMembership = new VipMembership();
 
 $chargeDetails = json_decode(file_get_contents('php://input'));
 $file_handle = fopen('my_filename.json', 'w');
-fwrite($file_handle, $chargeDetails);
+fwrite($file_handle, file_get_contents('php://input'));
 fclose($file_handle);
 /*$chargeDetails = json_decode('{  
    "charge":{  
