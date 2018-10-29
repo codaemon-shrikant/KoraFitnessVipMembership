@@ -19,18 +19,22 @@ class VipMembership {
     $result = $this->conn->query($sql);
     return $result->fetch_assoc();
   }
-  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, $chargeId=0, $chargeStatus, $chargeCreatedAt, $chargeUpdatedAt)
+  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $chargeId=0, $chargeStatus, $chargeCreatedAt, $chargeUpdatedAt)
   { 
     $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, charge_id, next_charge_date, created_at, updated_at, status)
                  VALUES ( 
                           '".$rechargeCustomerId."',
                           '".$shopifyCustomerId."',
-                          '".$subscriptionDetails->subscription->id."',
+                          '".$subscriptionId."',
                           '".$chargeId."',
-                          '".str_replace("T"," ",$subscriptionDetails->subscription->next_charge_scheduled_at)."',
+                          '".$nextChargeDate."',
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
                           '".$chargeStatus."')";
+              $file_handle = fopen('my_filename.json', 'w');
+              fwrite($file_handle, $sql);
+              fclose($file_handle);
+
       $result = $this->conn->query($sql);
    
   }
