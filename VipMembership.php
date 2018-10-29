@@ -31,10 +31,6 @@ class VipMembership {
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
                           '".$chargeStatus."')";
-              $file_handle = fopen('my_filename.json', 'w');
-              fwrite($file_handle, $sql);
-              fclose($file_handle);
-
       $result = $this->conn->query($sql);
    
   }
