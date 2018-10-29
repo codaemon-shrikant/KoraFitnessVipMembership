@@ -66,5 +66,18 @@ class RechargeApi {
 		$result = $curl->execute();
 		print_r($result);
 	}
+	function getWebhooks() {
+		$url = $this->rechargeBaseURL.'webhooks';
+		$headers = array(
+		  'Content-Type: application/json',
+		  'X-Recharge-Access-Token: '.$this->rechargeToken,
+		  "Accept: application/json"
+		);
+		$method = 'GET';
+		$data = [];
+		$curl = new CurlCall($url, $method, $headers, $data);
+		$result = $curl->execute();
+		print_r($result);
+	}
 }
 ?>
