@@ -62,8 +62,8 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	}
 	// Add entry in credit details table 
 	$vipMembership->insertCredit($shopifyCustomerId, $creditAmount, $subscriptionDetails->subscription->price, '1');
-	$vipMembership->addSubscriptionDetails($subscriptionDetails);
-	$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, $chargeDetails);
+	//$vipMembership->addSubscriptionDetails($subscriptionDetails);
+	$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, "SUCCESS", str_replace("T"," ", $subscriptionDetails->subscription->created_at) , str_replace("T"," ", $subscriptionDetails->subscription->updated_at));
 
 } else {
 	echo "Customer Not Found";
