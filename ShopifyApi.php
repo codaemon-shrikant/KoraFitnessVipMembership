@@ -29,6 +29,7 @@ class ShopifyApi {
     }
 
     function updateCustomer($customerId, $customerDetails) {
+        
     	$data = $customerDetails;
         //set headers
         $headers = array(

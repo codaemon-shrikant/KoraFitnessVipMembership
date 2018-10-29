@@ -3,6 +3,7 @@ class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
   private $mysql_password = "9VhDB'/L";
+  //private $mysql_password = "root";
   private $mysql_database = "koraVipMembership";
 	private $conn;
 	function __construct(){
@@ -18,10 +19,44 @@ class VipMembership {
     $result = $this->conn->query($sql);
     return $result->fetch_assoc();
   }
+  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, $chargeDetails)
+  { 
+    $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, charge_id, next_charge_date, created_at, updated_at, status)
+                 VALUES ( 
+                          '".$rechargeCustomerId."',
+                          '".$shopifyCustomerId."',
+                          '".$subscriptionDetails->subscription->id."',
+                          '".$chargeDetails->charge->id."',
+                          '".str_replace("T"," ",$subscriptionDetails->subscription->next_charge_scheduled_at)."',
+                          '".str_replace("T"," ",$chargeDetails->charge->created_at)."',
+                          '".str_replace("T"," ",$chargeDetails->charge->updated_at)."',
+                          '".$chargeDetails->charge->status."')";
+    print_r($sql);die();
+      $result = $this->conn->query($sql);
+   
+  }
+  function updateVipMemberNextChargeDate($customerId, $nextChargeDate)
+  {
 
-	function addVipMemberDetails($customerId, $shopifyCustomerId, $nextChargeDate, $credit) {
-		$sql = "INSERT INTO vip_members(customer_id, shopify_customer_id, next_charge_scheduled_at, status, credit_amount) VALUES ('".$customerId."', '".$shopifyCustomerId."', '".$nextChargeDate."', 1 , '".$credit."')";
-        $result = $this->conn->query($sql); 	}
+    $sql = "UPDATE vip_members SET next_charge_scheduled_at = '".str_replace("T"," ",$nextChargeDate)."' WHERE shopify_customer_id = '".$customerId."'";
+    $result =  $this->conn->query($sql);
+  }
+  function updateVipMemberStatus($customerId, $status)
+  {
+    $sql = "UPDATE vip_members SET status = "+$status+" WHERE shopify_customer_id = '".$customerId."'";
+    $result =  $this->conn->query($sql);
+  }
+  function checkChargeDate()
+     {
+       $currentDate =  date('Y-m-d h:i:s');
+       $sql = "SELECT * FROM vip_members WHERE next_charge_scheduled_at >= '".$currentDate."' ";
+       $result = $this->conn->query($sql);
+       $data = $result->fetch_array();
+       return $data;
+     }
+	function addVipMemberDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $credit) {
+		$sql = "INSERT INTO vip_members(customer_id, shopify_customer_id, subscription_id, next_charge_scheduled_at, status, credit_amount) VALUES ('".$customerId."', '".$shopifyCustomerId."', '".$subscriptionId."', '".$nextChargeDate."', 1 , '".$credit."')";
+    $result = $this->conn->query($sql); 	}
 
  	function updateVipMemberDetails($customerId, $nextChargeDate, $credit, $status) {
  		$sql = "UPDATE vip_members SET next_charge_scheduled_at = '".$nextChargeDate."', status = '".$status."', credit_amount = '".$credit."' WHERE customer_id = '".$customerId."'";

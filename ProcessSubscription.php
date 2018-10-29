@@ -22,8 +22,9 @@ $vipMembership = new VipMembership();
 /*
 {"customer":{"id":741158289519,"email":"yogesh.suryawanshi@codaemonsoftwares.com","accepts_marketing":false,"created_at":"2018-09-04T15:01:48-04:00","updated_at":"2018-10-09T02:17:24-04:00","first_name":"Yogesh","last_name":"Suryawanshi","orders_count":11,"state":"enabled","total_spent":"0.00","last_order_id":657152311407,"note":"","verified_email":true,"multipass_identifier":null,"tax_exempt":false,"phone":null,"tags":"VIP Customer New","last_order_name":"#1011","addresses":[{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}],"admin_graphql_api_id":"gid:\/\/shopify\/Customer\/741158289519","default_address":{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}}}
 */
-
 $subscriptionDetails = json_decode(file_get_contents('php://input'));
+
+$subscriptionId = $subscriptionDetails->subscription->id; 
 
 // Get customer details from recharge 
 $customerId =  $subscriptionDetails->subscription->customer_id;
@@ -31,6 +32,7 @@ $rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
 
 //Check if recharge have shopify customer id
 if($rechargeCustomerDetails->customer->shopify_customer_id) {
+
 	//Read Requierd data from subscription details
  	$nextChargeDate = $subscriptionDetails->subscription->next_charge_scheduled_at; 
     $creditAmount = $subscriptionDetails->subscription->price; 
@@ -42,24 +44,26 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	// get shopify customer details
 	$shopifyCustomerDetails = $shopifyApi->getCustomer($shopifyCustomerId);
 	if ($vipMemberDetails) {
+		
 		$creditAmount += $vipMemberDetails['credit_amount'];
 		$vipMembership->updateVipMemberDetails($customerId, $nextChargeDate, $creditAmount, 1);
     } else {
-    	$vipMembership->addVipMemberDetails($customerId, $shopifyCustomerId, $nextChargeDate, $creditAmount);
-    }
-
-    // Set VIP tag to the customer
-	$customerDetailsToUpdate = array(
-            'customer' =>
-                array(
-                   'id' => $shopifyCustomerDetails->customer->id,
-                   'tags' => 'VIP,'.$shopifyCustomerDetails->customer->tags,
-                )
-        );
-	$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);
+    	
+    	$vipMembership->addVipMemberDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $creditAmount);
+	    // Set VIP tag to the customer
+		$customerDetailsToUpdate = array(
+	            'customer' =>
+	                array(
+	                   'id' => $shopifyCustomerDetails->customer->id,
+	                   'tags' => 'VIP,'.$shopifyCustomerDetails->customer->tags,
+	                )
+	        );
+		$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);
+	}
 	// Add entry in credit details table 
 	$vipMembership->insertCredit($shopifyCustomerId, $creditAmount, $subscriptionDetails->subscription->price, '1');
 	$vipMembership->addSubscriptionDetails($subscriptionDetails);
+	$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionDetails, $chargeDetails);
 
 } else {
 	echo "Customer Not Found";

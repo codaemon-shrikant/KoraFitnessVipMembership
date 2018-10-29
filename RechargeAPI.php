@@ -37,5 +37,20 @@ class RechargeApi {
 		$result = $curl->execute();
         return $result;
 	}
+	function getSubscriptionDetails($subscriptionId) {
+		$url = $this->rechargeBaseURL.'subscriptions/'.$subscriptionId;
+		$method = "GET";
+		$data = [];
+        $headers = array(
+          'Content-Type: application/json',
+          'X-Recharge-Access-Token: '.$this->rechargeToken,
+          "Accept: application/json"
+        );
+
+        $curl = new CurlCall($url, $method, $headers, $data);
+
+		$result = $curl->execute();
+        return $result;
+	}
 }
 ?>
