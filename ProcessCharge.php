@@ -11,6 +11,9 @@ $rechargeApi = new RechargeApi();
 $vipMembership = new VipMembership();
 
 $chargeDetails = json_decode(file_get_contents('php://input'));
+$file_handle = fopen('my_filename.json', 'w');
+fwrite($file_handle, $chargeDetails);
+fclose($file_handle);
 /*$chargeDetails = json_decode('{  
    "charge":{  
       "address_id":19248493,
