@@ -151,4 +151,17 @@ class ShopifyApi {
         return $curl->execute();
     }
 
+    function removeCouponCode($coupon, $pricingRuleId)
+
+        $url = $this->shopifyBaseURL . "/admin/price_rules/".$coupon."/discount_codes/".$pricingRuleId.".json";
+        $method = 'DELETE';
+        //set headers
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+        $data = [];
+        $curl = new CurlCall($url, $method, $headers, $data);
+        return $curl->execute();
+    }
 }

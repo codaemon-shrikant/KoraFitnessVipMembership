@@ -54,12 +54,19 @@ if($customerId) {
             $creditDiscount = $genrateCoupon->CreditDiscount($creditAmount, $cartTotal);
             $totalDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
 
-            $code = generateToken($totalDiscount, $customerId);
+            //Reading coupon details after generation of the coupon.
+            $createCoupon = generateToken($totalDiscount, $customerId);
+            //reading coupon code.
+            $code = $createCoupon->discount_code->code;
+            //reading pricing rule.
+            $pricingRuleId = $createCoupon->discount_code->price_rule_id;
+
+
             $creditBalance = 0; //Remaining Balance
             $amount = $creditAmount; //Credit from db
             $creditPercent = $creditDiscount;
 
-            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount);
+            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount, $pricingRuleId);
             //$vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
            // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
             $jsonFormat = $vipMembership->jsonFormat($code, $amount, $creditPercent, $totalDiscount, $creditBalance);
@@ -70,13 +77,18 @@ if($customerId) {
             $amountToUseFromCredit = $amountAfterDiscount;
             $totalDiscount = $genrateCoupon->CreditDiscountFor100percent();
             
-            $code =  generateToken($totalDiscount, $customerId);
-            
+            //Reading coupon details after generation of the coupon.
+            $createCoupon =  generateToken($totalDiscount, $customerId);
+            //reading coupon code.
+            $code = $createCoupon->discount_code->code;
+            //reading pricing rule.
+            $pricingRuleId = $createCoupon->discount_code->price_rule_id;
+
             $creditBalance = $creditAmount - $amountToUseFromCredit; 
             $amount = $amountToUseFromCredit; //Credit from db
             $creditPercent = ($amount/$cartTotal) * 100;
 
-            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount);
+            $vipMembership->insertCoupon($code, $customerId, $totalDiscount, $amount, $pricingRuleId);
            // $vipMembership->updateVipMemberCredit($customerId, $creditBalance);
            // $vipMembership->updateCreditDetails($customerId, $creditBalance, $amount, '0');
 
@@ -102,5 +114,5 @@ function generateToken($totalDiscount, $shopifyCustomerId) {
     $price_rule_id = $shopifyApi->price_rule_id($price_rules);//generate price rule id
     $rule_id = $price_rule_id->price_rule->id;//get price rule id
     $createCoupon = $shopifyApi->createDiscount($generateCode, $rule_id);//generate discount in shopify'
-    return $code;
+    return $createCoupon;
 }
