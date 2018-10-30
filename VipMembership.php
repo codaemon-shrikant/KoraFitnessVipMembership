@@ -2,8 +2,8 @@
 class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
-  private $mysql_password = "9VhDB'/L";
-  //private $mysql_password = "root";
+  //private $mysql_password = "9VhDB'/L";
+  private $mysql_password = "root";
   private $mysql_database = "koraVipMembership";
 	private $conn;
 	function __construct(){
@@ -31,24 +31,28 @@ class VipMembership {
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
                           '".$chargeStatus."')";
+
+      $file_handle = fopen('my_filename.json', 'w');
+      fwrite($file_handle, $sql);
+      fclose($file_handle);
+
       $result = $this->conn->query($sql);
    
   }
-  function updateVipMemberNextChargeDate($customerId, $nextChargeDate)
+  function updateVipMember($customerId, $creditAmount, $nextChargeDate, $status)
   {
-
-    $sql = "UPDATE vip_members SET next_charge_scheduled_at = '".str_replace("T"," ",$nextChargeDate)."' WHERE shopify_customer_id = '".$customerId."'";
+    $sql = "UPDATE vip_members SET credit_amount = '".$creditAmount."', next_charge_scheduled_at = '".str_replace("T"," ",$nextChargeDate)."', status ='".$status."' WHERE shopify_customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
-  function updateVipMemberStatus($customerId, $status)
+  function updateFailedVipMember($customerId, $status)
   {
     $sql = "UPDATE vip_members SET status = "+$status+" WHERE shopify_customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
-  function checkChargeDate()
+  function checkDeactivatedCustomers()
      {
        $currentDate =  date('Y-m-d h:i:s');
-       $sql = "SELECT * FROM vip_members WHERE next_charge_scheduled_at >= '".$currentDate."' ";
+       $sql = "SELECT * FROM vip_members WHERE next_charge_scheduled_at <= '".$currentDate."' and status = '1'";
        $result = $this->conn->query($sql);
        $data = $result->fetch_array();
        return $data;

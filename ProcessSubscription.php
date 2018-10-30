@@ -25,10 +25,6 @@ $vipMembership = new VipMembership();
 */
 $subscriptionDetails = json_decode(file_get_contents('php://input'));
 
-$file_handle = fopen('my_filename.json', 'w');
-              fwrite($file_handle, file_get_contents('php://input'));
-              fclose($file_handle);
-
 $subscriptionId = $subscriptionDetails->subscription->id; 
 
 // Get customer details from recharge 
