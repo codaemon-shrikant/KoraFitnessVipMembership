@@ -40,7 +40,7 @@ $orderDetails = json_decode(file_get_contents('php://input'));
 			$vipMembership->updateVipMemberCredit($customerId, $amountRemaining);//update amount in vipmember table
 
 			//add code to remove shopify coupon 
-			$shopifyApi->removeCouponCode($data['coupon'], $data['pricing_rule_id']);
+			$shopifyApi->removeCouponCode($data['code'], $data['pricing_rule_id']);
 		}
 	}
 
