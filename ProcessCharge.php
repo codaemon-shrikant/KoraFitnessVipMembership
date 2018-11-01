@@ -115,8 +115,8 @@ $chargeDetails = json_decode('{
 */
 $chargeDetails = json_decode(file_get_contents('php://input'));
 
-$subscriptionId = $chargeDetails->line_items[0]->subscription_id;//subscription_id from charge paid response. 
-$rechargeCustomerId = $chargeDetails->customer_id;
+$subscriptionId = $chargeDetails->charge->line_items[0]->subscription_id;//subscription_id from charge paid response. 
+$rechargeCustomerId = $chargeDetails->charge->customer_id;
 $vipMemberDetails = $vipMembership->getVipMemberDetails($rechargeCustomerId);
 
 $shopifyCustomerId = $vipMemberDetails['shopify_customer_id'];
@@ -124,15 +124,15 @@ $subscriptionDetails = $rechargeApi->getSubscriptionDetails($subscriptionId);//s
 
 $nextChargeDate = $subscriptionDetails->subscription->next_charge_scheduled_at;
 
-$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, str_replace("T"," ",$nextChargeDate) ,  $chargeDetails->id, $chargeDetails->status, str_replace("T"," ",$chargeDetails->created_at) , str_replace("T"," ",$chargeDetails->updated_at));//add charge details in db
+$vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, str_replace("T"," ",$nextChargeDate) ,  $chargeDetails->charge->id, $chargeDetails->charge->status, str_replace("T"," ",$chargeDetails->charge->created_at) , str_replace("T"," ",$chargeDetails->charge->updated_at));//add charge details in db
 
-$creditAmount = $chargeDetails->line_items[0]->price;
+$creditAmount = $chargeDetails->charge->line_items[0]->price;
 
 $customerDetails = $shopifyApi->getCustomer($shopifyCustomerId);
 $customerTag = $customerDetails->customer->tags;
 
 
-if ($chargeDetails->status == "SUCCESS") //if charge status is SUCCESS 
+if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS 
 {	
 	$creditAmount += $vipMemberDetails['credit_amount'];
 	$vipMembership->updateVipMember($shopifyCustomerId, $creditAmount, $nextChargeDate, 1);//update vip_membership table next_charge_date

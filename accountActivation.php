@@ -20,8 +20,69 @@ $subscriptionDetails = json_decode('{"subscription": {"id": 24216075, "address_i
 "properties": [], "expire_after_specific_number_of_charges": null, "max_retries_reached": 0, "has_queued_charges": 1}}');
 
 // Shopify User Data
-/*
-{"customer":{"id":741158289519,"email":"yogesh.suryawanshi@codaemonsoftwares.com","accepts_marketing":false,"created_at":"2018-09-04T15:01:48-04:00","updated_at":"2018-10-09T02:17:24-04:00","first_name":"Yogesh","last_name":"Suryawanshi","orders_count":11,"state":"enabled","total_spent":"0.00","last_order_id":657152311407,"note":"","verified_email":true,"multipass_identifier":null,"tax_exempt":false,"phone":null,"tags":"VIP Customer New","last_order_name":"#1011","addresses":[{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}],"admin_graphql_api_id":"gid:\/\/
+/*$customerDetails =json_decode('{"customer": {
+							    "id": 871124238447,
+							    "email": "shrikant12@yopmail.com",
+							    "accepts_marketing": false,
+							    "created_at": "2018-10-23T15:29:24-04:00",
+							    "updated_at": "2018-10-23T15:29:24-04:00",
+							    "first_name": "Bob",
+							    "last_name": "Norman",
+							    "orders_count": 1,
+							    "state": "disabled",
+							    "total_spent": "41.94",
+							    "last_order_id": 450789469,
+							    "note": null,
+							    "verified_email": true,
+							    "multipass_identifier": null,
+							    "tax_exempt": false,
+							    "phone": null,
+							    "tags": "",
+							    "last_order_name": "#1001",
+							    "currency": "USD",
+							    "addresses": [
+							      {
+							        "id": 207119551,
+							        "customer_id": 207119551,
+							        "first_name": null,
+							        "last_name": null,
+							        "company": null,
+							        "address1": "Chestnut Street 92",
+							        "address2": "",
+							        "city": "Louisville",
+							        "province": "Kentucky",
+							        "country": "United States",
+							        "zip": "40202",
+							        "phone": "555-625-1199",
+							        "name": "",
+							        "province_code": "KY",
+							        "country_code": "US",
+							        "country_name": "United States",
+							        "default": true
+							      }
+							    ],
+							    "admin_graphql_api_id": "gid://shopify/Customer/207119551",
+							    "default_address": {
+							      "id": 207119551,
+							      "customer_id": 207119551,
+							      "first_name": null,
+							      "last_name": null,
+							      "company": null,
+							      "address1": "Chestnut Street 92",
+							      "address2": "",
+							      "city": "Louisville",
+							      "province": "Kentucky",
+							      "country": "United States",
+							      "zip": "40202",
+							      "phone": "555-625-1199",
+							      "name": "",
+							      "province_code": "KY",
+							      "country_code": "US",
+							      "country_name": "United States",
+							      "default": true
+							    }
+							  }}');
+customer":{"id":741158289519,"email":"yogesh.suryawanshi@codaemonsoftwares.com","accepts_marketing":false,"created_at":"2018-09-04T15:01:48-04:00","updated_at":"2018-10-09T02:17:24-04:00","first_name":"Yogesh","last_name":"Suryawanshi","orders_count":11,"state":"enabled","total_spent":"0.00","last_order_id":657152311407,"note":"","verified_email":true,"multipass_identifier":null,"tax_exempt":false,"phone":null,"tags":"VIP Customer New","last_order_name":"#1011","addresses":[{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}],"admin_graphql_api_id":"gid:\/\/
 
 \/Customer\/741158289519","default_address":{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}}}
 */
@@ -29,16 +90,27 @@ $subscriptionDetails = json_decode('{"subscription": {"id": 24216075, "address_i
 //$subscriptionDetails = file_get_contents('php://input');
 
 // Get customer details from recharge 
-$customerId =  $subscriptionDetails->subscription->customer_id;
+$customerId =  741158289519;
 $rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
+$customerDetails = $shopifyApi->getCustomer($customerId);
 
 //Check if recharge have shopify customer id
-if($rechargeCustomerDetails->customer->shopify_customer_id) {
+if($customerDetails->customer->state == "disabled") 
+{
+	$customerDetailsToUpdate = array(
+		            'customer' =>
+		                array(
+		                   'id' => $customerDetails->customer->id,
+		                   'state' => 'enabled',
+		                )
+		        );
+	$changeCustomerState = $shopifyApi->changeCustomerState($customerDetails->customer->id, $customerDetailsToUpdate);
+	//$sendInvite = $shopifyApi->send_invite($customerDetails->customer->id, $customerDetails->customer->email); 
+	//$accountInvitation = $shopifyApi->accountInvitation($customerDetails->customer->id);
 
-	$email = $rechargeCustomerDetails->customer->email;
-	$sendInvite = $shopifyApi->send_invite($email, $customerId); 
-
-} else {
+} 
+else 
+{
 	echo "Customer Not Found";
 }
 

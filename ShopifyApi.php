@@ -128,17 +128,21 @@ class ShopifyApi {
     }
    function send_invite($customerId, $customerEmail)
     {
-        //url to apply generate coupon
+        //url to send invite
         $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/send_invite.json";
-        $customer_invite = array(
-        'customer_invite' =>
-              array(
-                "to" => $customerEmail,
-                "from" => "monika541992@gmail.com",
-                "subject" => "Welcome to my new shop",
-                "custom_message" => "My awesome new store"
-              )
-            );
+
+        $customer_invite = json_decode('{
+                              "customer_invite": {
+                                "to": $customerEmail,
+                                "from": "info@codaemonsoftwares.com",
+                                "bcc": [
+                                  "tay@korafirness.com"
+                                ],
+                                "subject": "Customer account activation",
+                                "custom_message": Hello World
+                              }
+                            }');
+        
         $data = $customer_invite;
         $method = 'POST';
 
@@ -150,7 +154,40 @@ class ShopifyApi {
         $curl = new CurlCall($url, $method, $headers, $data);
         return $curl->execute();
     }
+    function accountInvitation($customerId)
+    {
+        //url to send invite
+        $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "/account_activation_url.json";
+        $method = 'POST';
 
+        //set headers
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+        $curl = new CurlCall($url, $method, $headers, $data);
+        print_r($curl->execute());
+    }
+    function changeCustomerState($customerId, $customerDetails)
+    {
+        echo "<pre>";
+        print_r($customerDetails);echo "<br>";
+
+        $data = json_encode($customerDetails);print_r($data);echo "<br>";
+        //set headers
+        $headers = array(
+            'APIKEY: '.$this->apiKey,
+            'Content-Type: application/json',
+         );
+        
+        //url to apply customer tag
+        $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "." ."json";
+        $method = 'PUT';
+
+        $curl = new CurlCall($url, $method, $headers, $data);
+        
+        print_r($curl->execute());die();
+    }
     function removeCouponCode($coupon, $pricingRuleId) {
         $url = $this->shopifyBaseURL . "/admin/price_rules/".$coupon."/discount_codes/".$pricingRuleId.".json";
         $method = 'DELETE';

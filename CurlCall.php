@@ -15,8 +15,9 @@ class CurlCall {
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $this->method);
 		if($this->method === 'POST' || $this->method === 'PUT')
 		{
-			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->data));
+			curl_setopt($curl, CURLOPT_PUT, json_encode($this->data));
 		}
+
 		/*else
 		{
 			curl_setopt($curl, CURLOPT_GETFIELDS, json_encode($this->data));
