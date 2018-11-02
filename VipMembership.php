@@ -2,8 +2,8 @@
 class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
-  private $mysql_password = "9VhDB'/L";
-  //private $mysql_password = "root";
+  //private $mysql_password = "9VhDB'/L";
+  private $mysql_password = "root";
   private $mysql_database = "koraVipMembership";
 	private $conn;
 	function __construct(){
@@ -24,13 +24,14 @@ class VipMembership {
     $result = $this->conn->query($sql);
     return $result->fetch_assoc();
   }
-  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, $chargeId=0, $chargeStatus, $chargeCreatedAt, $chargeUpdatedAt)
+  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $chargeId=0, $chargeCreatedAt, $chargeUpdatedAt, $chargeStatus)
   { 
-    $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, charge_id, created_at, updated_at, status)
+    $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, next_charge_date, charge_id, created_at, updated_at, status)
                  VALUES ( 
                           '".$rechargeCustomerId."',
                           '".$shopifyCustomerId."',
                           '".$subscriptionId."',
+                          '".$nextChargeDate."',
                           '".$chargeId."',
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
