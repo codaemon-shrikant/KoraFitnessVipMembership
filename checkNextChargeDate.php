@@ -10,9 +10,9 @@ $shopifyApi = new shopifyApi();
 $rechargeApi = new RechargeApi();
 $vipMembership = new VipMembership();
 
-$deactivatedCustomers = $vipMembership->checkDeactivatedCustomers();
+$results = $vipMembership->checkDeactivatedCustomers();
 
-foreach($deactivatedCustomers as $customer) {
+while($deactivatedCustomers = $results->fetch_assoc()) {
 	$customerDetails = $shopifyApi->getCustomer($customer['shopify_customer_id']);
 	$customerTag = $customerDetails->customer->tags;
 	$vipMembership->updateFailedVipMember($customer['shopify_customer_id'], 0);//update status to 0

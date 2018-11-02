@@ -24,19 +24,17 @@ class VipMembership {
     $result = $this->conn->query($sql);
     return $result->fetch_assoc();
   }
-  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $chargeId=0, $chargeStatus, $chargeCreatedAt, $chargeUpdatedAt)
+  function addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, $chargeId=0, $chargeStatus, $chargeCreatedAt, $chargeUpdatedAt)
   { 
-    $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, charge_id, next_charge_date, created_at, updated_at, status)
+    $sql = "INSERT INTO charge_details(recharge_customer_id, shopify_customer_id, subscription_id, charge_id, created_at, updated_at, status)
                  VALUES ( 
                           '".$rechargeCustomerId."',
                           '".$shopifyCustomerId."',
                           '".$subscriptionId."',
                           '".$chargeId."',
-                          '".$nextChargeDate."',
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
                           '".$chargeStatus."')";
-
       $result = $this->conn->query($sql);
    
   }
@@ -55,8 +53,7 @@ class VipMembership {
        $currentDate =  date('Y-m-d h:i:s');
        $sql = "SELECT * FROM vip_members WHERE next_charge_scheduled_at <= '".$currentDate."' and status = '1'";
        $result = $this->conn->query($sql);
-       $data = $result->fetch_array();
-       return $data;
+       return $result;
      }
 	function addVipMemberDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $credit) {
 		$sql = "INSERT INTO vip_members(customer_id, shopify_customer_id, subscription_id, next_charge_scheduled_at, status, credit_amount) VALUES ('".$customerId."', '".$shopifyCustomerId."', '".$subscriptionId."', '".$nextChargeDate."', 1 , '".$credit."')";
