@@ -130,7 +130,9 @@ $creditAmount = $chargeDetails->charge->line_items[0]->price;
 
 $customerDetails = $shopifyApi->getCustomer($shopifyCustomerId);
 $customerTag = $customerDetails->customer->tags;
-
+    $file_handle = fopen('my_filename.json', 'w');
+    fwrite($file_handle, file_get_contents('php://input').json_encode($subscriptionDetails));
+    fclose($file_handle);
 
 if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS 
 {	
