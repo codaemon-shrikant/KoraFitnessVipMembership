@@ -2,8 +2,8 @@
 class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
-  //private $mysql_password = "9VhDB'/L";
-  private $mysql_password = "root";
+  private $mysql_password = "9VhDB'/L";
+  //private $mysql_password = "root";
   private $mysql_database = "koraVipMembership";
 	private $conn;
 	function __construct(){
@@ -36,6 +36,7 @@ class VipMembership {
                           '".$chargeCreatedAt."',
                           '".$chargeUpdatedAt."',
                           '".$chargeStatus."')";
+
       $result = $this->conn->query($sql);
    
   }

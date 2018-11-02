@@ -36,14 +36,11 @@ $rechargeCustomerId = $chargeDetails->charge->customer_id;
 $vipMemberDetails = $vipMembership->getVipMemberDetails($rechargeCustomerId);
 $shopifyCustomerId = $vipMemberDetails['shopify_customer_id'];
 
-$updatedCustomerTags = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);//remove the VIP tag
     
 $subscriptionDetails = $rechargeApi->getSubscriptionDetails($subscriptionId);//subscription details from recharge
 
-
 $nextChargeDate = $subscriptionDetails->subscription->next_charge_scheduled_at;
-    
-
+   
 if($nextChargeDate == null) {
 
     $scheduledAt = str_replace("T"," ",$chargeDetails->charge->scheduled_at);
@@ -61,7 +58,7 @@ $customerTag = $customerDetails->customer->tags;
     /*$file_handle = fopen('my_filename.json', 'w');
     fwrite($file_handle, file_get_contents('php://input').json_encode($subscriptionDetails));
     fclose($file_handle);
-*/
+    */
 if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS 
 {	
 	$creditAmount += $vipMemberDetails['credit_amount'];
@@ -74,6 +71,8 @@ if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS
 		                   'tags' => 'VIP,'.$customerDetails->customer->tags,
 		                )
 		        );
+
+    $updatedCustomerTags = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);//remove the VIP tag
 
     $vipMembership->updateVipMember($shopifyCustomerId, $creditAmount, $nextChargeDate, 1);//update vip_membership table next_charge_date
 

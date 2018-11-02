@@ -16,9 +16,6 @@ class ShopifyApi {
         return $customerDetails;
     }
 
-    //email:yogesh.suryawanshi@codaemonsoftwares.com;fields=email,id
-    //$searchBy = email:yogesh.suryawanshi@codaemonsoftwares.com
-    //$fieldToSelect = email,id;
     function searchCustomer($searchBy, $fieldToSelect) {
     	$url = $this->shopifyBaseURL . "/admin/customers/search.json?query=".$searchBy;
     	if($fieldToSelect) 
