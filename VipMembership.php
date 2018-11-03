@@ -47,7 +47,7 @@ class VipMembership {
   }
   function updateFailedVipMember($customerId, $status)
   {
-    $sql = "UPDATE vip_members SET status = "+$status+" WHERE shopify_customer_id = '".$customerId."'";
+    $sql = "UPDATE vip_members SET status = '".$status."'' WHERE shopify_customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
   function checkDeactivatedCustomers()
