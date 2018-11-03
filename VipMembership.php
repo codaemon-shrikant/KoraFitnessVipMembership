@@ -49,6 +49,9 @@ class VipMembership {
   {
     $sql = "UPDATE vip_members SET status = '".$status."' WHERE shopify_customer_id = '".$customerId."'";
     print_r($sql);
+    $file_handle = fopen('my_filename.json', 'w');
+    fwrite($file_handle, $sql);
+    fclose($file_handle);
     $result =  $this->conn->query($sql);
   }
   function checkDeactivatedCustomers()
