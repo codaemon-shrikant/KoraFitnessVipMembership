@@ -42,12 +42,13 @@ class VipMembership {
   }
   function updateVipMember($customerId, $creditAmount, $nextChargeDate, $status)
   {
-    $sql = "UPDATE vip_members SET credit_amount = '".$creditAmount."', next_charge_scheduled_at = '".str_replace("T"," ",$nextChargeDate)."', status ='".$status."' WHERE shopify_customer_id = '".$customerId."'";
+    $sql = "UPDATE vip_members SET credit_amount = '".$creditAmount."', next_charge_scheduled_at = '".str_replace("T"," ",$nextChargeDate)."', status ='".$status."'  WHERE shopify_customer_id = '".$customerId."'";
     $result =  $this->conn->query($sql);
   }
   function updateFailedVipMember($customerId, $status)
   {
-    $sql = "UPDATE vip_members SET status = '".$status."'' WHERE shopify_customer_id = '".$customerId."'";
+    $sql = "UPDATE vip_members SET status = '".$status."' WHERE shopify_customer_id = '".$customerId."'";
+    print_r($sql);
     $result =  $this->conn->query($sql);
   }
   function checkDeactivatedCustomers()

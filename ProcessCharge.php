@@ -35,7 +35,7 @@ $subscriptionId = $chargeDetails->charge->line_items[0]->subscription_id;//subsc
 $rechargeCustomerId = $chargeDetails->charge->customer_id;
 $vipMemberDetails = $vipMembership->getVipMemberDetails($rechargeCustomerId);
 $shopifyCustomerId = $vipMemberDetails['shopify_customer_id'];
-
+//print_r($shopifyCustomerId);
     
 $subscriptionDetails = $rechargeApi->getSubscriptionDetails($subscriptionId);//subscription details from recharge
 
@@ -62,7 +62,6 @@ $customerTag = $customerDetails->customer->tags;
 if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS 
 {	
 	$creditAmount += $vipMemberDetails['credit_amount'];
-	
 
 	$customerDetailsToUpdate = array(
 		            'customer' =>
@@ -79,7 +78,6 @@ if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS
 }
 else
 {
-
 	$vipMembership->updateFailedVipMember($shopifyCustomerId, 0);//update status to 0
 
 	$removeVIPTag = chop($customerTag,"VIP");
