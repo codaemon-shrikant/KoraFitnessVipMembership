@@ -11,22 +11,34 @@ $rechargeApi = new RechargeApi();
 $vipMembership = new VipMembership();
 
 $results = $vipMembership->checkDeactivatedCustomers();
-
-while($deactivatedCustomers = $results->fetch_assoc()) {
-	$customerDetails = $shopifyApi->getCustomer($customer['shopify_customer_id']);
+while($deactivatedCustomers = $results->fetch_assoc()) { 
+	$shopifyCustomerId = $deactivatedCustomers['shopify_customer_id'];
+	$customerDetails = $shopifyApi->getCustomer($deactivatedCustomers['shopify_customer_id']);
 	$customerTag = $customerDetails->customer->tags;
-	$vipMembership->updateFailedVipMember($customer['shopify_customer_id'], 0);//update status to 0
+	$vipMembership->updateFailedVipMember($shopifyCustomerId, 0);//update status to 0
 
-	$removeVIPTag = chop($customerTag,"VIP");
+	$tags = explode(",",$customerTag);
+	
+	$newTags =array();
+	foreach ($tags as $key => $value) {
+		$value = trim($value);
+		array_push($newTags, $value);
+    }
+    
+    if(in_array('VIP', $newTags)) {
+    	unset($newTags[array_search('VIP', $newTags)]);
+    	
+    	$removeVIPTag = implode(", ", $newTags);print_r($removeVIPTag);
 
-	$customerDetailsToUpdate = array(
+    	$customerDetailsToUpdate = array(
 		            'customer' =>
 		                array(
 		                   'id' => $shopifyCustomerId,
-		                   'tags' => $removeVIPTag,
+		                   'tags' => $removeVIPTag
 		                )
 		        );
-	$updatedCustomerTags = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);//remove the VIP tag
+		$updatedCustomerTags = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);//remove the VIP tag
+	}
 }
 
 ?>

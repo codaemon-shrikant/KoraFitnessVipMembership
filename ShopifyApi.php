@@ -2,8 +2,10 @@
 error_reporting(E_ALL);
 class ShopifyApi {
 	private $shop = "korafitness-dev";
-    private $apiKey = "acac9a7e911be70b12ca8c6f4c2c5311";
-    private $password = "5627ff97371c07a2f06ab1ad4540a8c0";
+    //private $apiKey = "acac9a7e911be70b12ca8c6f4c2c5311";
+    //private $password = "5627ff97371c07a2f06ab1ad4540a8c0";
+    private $apiKey = "fdc6d9234e771474bcfe37c6b2171fff";
+    private $password = "47ad4d0787e1812d3db828423a0d81c2";
     private $shopifyBaseURL;
 
     function __construct() {
@@ -26,20 +28,20 @@ class ShopifyApi {
     }
 
     function updateCustomer($customerId, $customerDetails) {
-        
     	$data = $customerDetails;
+
         //set headers
         $headers = array(
             'APIKEY: '.$this->apiKey,
-            'Content-Type: application/json',
+            'Content-Type: application/json'
          );
-        
+
         //url to apply customer tag
         $url = $this->shopifyBaseURL . "/admin/customers/" .$customerId. "." ."json";
+
         $method = 'PUT';
 
-        $curl = new CurlCall($url, $method, $headers, $data);
-        echo "curl call send";
+        $curl = new CurlCall($url, $method, $headers, $data);echo "<br>";
         return $curl->execute();
     }
 
@@ -163,14 +165,12 @@ class ShopifyApi {
             'Content-Type: application/json',
          );
         $curl = new CurlCall($url, $method, $headers, $data);
-        print_r($curl->execute());
+        return $curl->execute();
     }
     function changeCustomerState($customerId, $customerDetails)
     {
-        echo "<pre>";
-        print_r($customerDetails);echo "<br>";
 
-        $data = json_encode($customerDetails);print_r($data);echo "<br>";
+        $data = json_encode($customerDetails);
         //set headers
         $headers = array(
             'APIKEY: '.$this->apiKey,
@@ -183,7 +183,7 @@ class ShopifyApi {
 
         $curl = new CurlCall($url, $method, $headers, $data);
         
-        print_r($curl->execute());die();
+        return $curl->execute();
     }
     function removeCouponCode($coupon, $pricingRuleId) {
         $url = $this->shopifyBaseURL . "/admin/price_rules/".$coupon."/discount_codes/".$pricingRuleId.".json";

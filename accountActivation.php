@@ -87,10 +87,10 @@ customer":{"id":741158289519,"email":"yogesh.suryawanshi@codaemonsoftwares.com",
 \/Customer\/741158289519","default_address":{"id":802227650671,"customer_id":741158289519,"first_name":"Yogesh1","last_name":"Suryawanshi1","company":"","address1":"Pune","address2":"Test","city":"Pune","province":"Maharashtra","country":"India","zip":"431116","phone":"","name":"Yogesh1 Suryawanshi1","province_code":"MH","country_code":"IN","country_name":"India","default":true}}}
 */
 
-//$subscriptionDetails = file_get_contents('php://input');
+$subscriptionDetails = file_get_contents('php://input');
 
 // Get customer details from recharge 
-$customerId =  741158289519;
+$customerId =  $subscriptionDetails->subscription->customer_id;;
 $rechargeCustomerDetails = $rechargeApi->getCustomer($customerId);
 $customerDetails = $shopifyApi->getCustomer($customerId);
 
