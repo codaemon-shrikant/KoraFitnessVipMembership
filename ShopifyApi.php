@@ -1,9 +1,10 @@
 <?php
 error_reporting(E_ALL);
 class ShopifyApi {
-	private $shop = "korafitness-dev";
+	//private $shop = "korafitness-dev";
     //private $apiKey = "acac9a7e911be70b12ca8c6f4c2c5311";
     //private $password = "5627ff97371c07a2f06ab1ad4540a8c0";
+    private $shop = "kora-fit";
     private $apiKey = "fdc6d9234e771474bcfe37c6b2171fff";
     private $password = "47ad4d0787e1812d3db828423a0d81c2";
     private $shopifyBaseURL;

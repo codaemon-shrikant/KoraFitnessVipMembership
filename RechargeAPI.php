@@ -32,6 +32,7 @@ class RechargeApi {
           'X-Recharge-Access-Token: '.$this->rechargeToken,
           "Accept: application/json"
         );
+        $data = [];
 
         $curl = new CurlCall($url, $method, $headers, $data);
 
