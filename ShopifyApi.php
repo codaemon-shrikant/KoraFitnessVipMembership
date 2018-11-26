@@ -72,7 +72,7 @@ class ShopifyApi {
           );
         return $discount_code;
       }
-    function price_rules($code, $totalDiscount)
+    function price_rules($code, $totalDiscount, $shopifyCustomerId)
       {
         $headers = array(
             'APIKEY: '.$this->apiKey,
@@ -86,9 +86,11 @@ class ShopifyApi {
                 "target_selection" => "all",
                 "allocation_method" => "across",
                 "value_type" => "percentage",
+                "allocation_limit" => 1,
                 "value" => -$totalDiscount,
-                "customer_selection" => "all",
-                "starts_at" => "2018-10-01T17:59:10Z"
+                "customer_selection" => "prerequisite",
+                "prerequisite_customer_ids" => [$shopifyCustomerId],
+                "starts_at" => date('Y-m-d h:m:s')
               )
             );
         return $price_rule;
