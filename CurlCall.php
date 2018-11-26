@@ -21,7 +21,6 @@ class CurlCall {
 			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->data));
 		}
 		
-
 		curl_setopt($curl, CURLOPT_URL, $this->url);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->header);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);

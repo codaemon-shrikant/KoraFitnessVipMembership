@@ -48,7 +48,7 @@ if($nextChargeDate == null) {
     $scheduledAt = str_replace("T"," ",$chargeDetails->charge->scheduled_at);
     $orderIntervalFrequency = $subscriptionDetails->subscription->order_interval_frequency;
     $orderIntervalUnit = $subscriptionDetails->subscription->order_interval_unit;
-    $nextChargeDate = date('Y-m-d h:m:s', strtotime($scheduledAt. ' + '.$orderIntervalFrequency . $orderIntervalUnit . 's'));
+    $nextChargeDate = date('Y-m-d', strtotime($scheduledAt. ' + '.$orderIntervalFrequency . $orderIntervalUnit . 's'));
 }
 
 $vipMembership->addChargeDetails($rechargeCustomerId, $shopifyCustomerId, $subscriptionId, str_replace("T"," ",$nextChargeDate), $chargeDetails->charge->id, str_replace("T"," ",$chargeDetails->charge->created_at) , str_replace("T"," ",$chargeDetails->charge->updated_at), $chargeDetails->charge->status);//add charge details in db
@@ -112,7 +112,6 @@ else
 		                )
 		        );
 		$updatedCustomerTags = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);//remove the VIP tag
-		print_r($updatedCustomerTags); 
 	}
 }
 

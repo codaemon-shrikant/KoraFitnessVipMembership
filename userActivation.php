@@ -19,7 +19,6 @@ $customerEmail = $customerDetails->customer->email;
 if ($customerState != "active") 
 {
 	$customerActive = $shopifyApi->send_invite($customerId, $customerEmail);
-	print_r($customerActive);
 }
 else
 {
