@@ -10,17 +10,17 @@ class GenerateCoupon {
   function CreditDiscount($creditAmount, $cartTotal)
   {
     $creditDiscount = ($creditAmount/$cartTotal) * 100;
-    return $creditDiscount;
+    return round($creditDiscount, 2);
   }
   function CreditDiscountFor100percent()
   {
     $creditDiscount = 100;
-    return $creditDiscount;
+    return round($creditDiscount, 2);
   }
   function TotalDiscount($defaultDiscountinPercentage, $creditDiscount)
   {
     $totalDiscount = $defaultDiscountinPercentage + $creditDiscount;
-    return $totalDiscount;
+    return round($totalDiscount, 2);
   }
 
 }

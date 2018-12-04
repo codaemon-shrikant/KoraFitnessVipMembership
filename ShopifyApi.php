@@ -63,7 +63,7 @@ class ShopifyApi {
     }
     function generate_code($totalDiscount,$customerId)
       {
-        $code = "VIP_" . time(). "_".$totalDiscount."_" . "OFF";
+        $code = "CHAMPION_" . time(). "_".$totalDiscount."_" . "OFF";
         $discount_code = array (
             'discount_code' =>
             array(
