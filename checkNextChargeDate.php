@@ -25,10 +25,10 @@ while($deactivatedCustomers = $results->fetch_assoc()) {
 		array_push($newTags, $value);
     }
     
-    if(in_array('VIP', $newTags)) {
-    	unset($newTags[array_search('VIP', $newTags)]);
+    if(in_array('CHAMPION', $newTags)) {
+    	unset($newTags[array_search('CHAMPION', $newTags)]);
     	
-    	$removeVIPTag = implode(", ", $newTags);print_r($removeVIPTag);
+    	$removeVIPTag = implode(", ", $newTags);
 
     	$customerDetailsToUpdate = array(
 		            'customer' =>

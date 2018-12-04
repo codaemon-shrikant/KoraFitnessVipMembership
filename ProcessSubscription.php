@@ -63,7 +63,7 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	            'customer' =>
 	                array(
 	                   'id' => $shopifyCustomerDetails->customer->id,
-	                   'tags' => 'VIP,'.$shopifyCustomerDetails->customer->tags,
+	                   'tags' => 'CHAMPION,'.$shopifyCustomerDetails->customer->tags,
 	                )
 	        );
 		$tagResponse = $shopifyApi->updateCustomer($shopifyCustomerId, $customerDetailsToUpdate);

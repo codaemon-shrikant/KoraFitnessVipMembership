@@ -69,14 +69,14 @@ if ($chargeDetails->charge->status == "SUCCESS") //if charge status is SUCCESS
 		$value = trim($value);
 		array_push($newTags,$value);
     }
-    if(!in_array('VIP', $newTags)) {
+    if(!in_array('CHAMPION', $newTags)) {
     	$addVIPTag = implode(",", $newTags);
 
     	$customerDetailsToUpdate = array (
 		            "customer" =>
 		                array(
 		                	"id" => $shopifyCustomerId,
-		                   	"tags" => "VIP,". $addVIPTag
+		                   	"tags" => "CHAMPION,". $addVIPTag
 		                )
 		        );
 
@@ -99,8 +99,8 @@ else
 		array_push($newTags, $value);
     }
     
-    if(in_array('VIP', $newTags)) {
-    	unset($newTags[array_search('VIP', $newTags)]);
+    if(in_array('CHAMPION', $newTags)) {
+    	unset($newTags[array_search('CHAMPION', $newTags)]);
     	
     	$removeVIPTag = implode(", ", $newTags);
 
