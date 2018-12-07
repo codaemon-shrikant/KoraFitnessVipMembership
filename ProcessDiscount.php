@@ -30,7 +30,7 @@ header("Access-Control-Allow-Origin: *");
 $order_id = null;
 $defaultDiscountinPercentage = $_GET['default_discount'];
 $cartTotal = $_GET['cart_total']/100;
-$customerId = 14818050092;
+$customerId = $_GET['customer_id'];
 
 //$cartDetails = file_get_contents('php://input');
 
