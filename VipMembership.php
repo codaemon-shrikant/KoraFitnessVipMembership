@@ -2,8 +2,8 @@
 class VipMembership {
 	private $mysql_server = "localhost";
 	private $mysql_username = "root";
-  //private $mysql_password = "9VhDB'/L";
-  private $mysql_password = "root";
+  private $mysql_password = "9VhDB'/L";
+  //private $mysql_password = "root";
   private $mysql_database = "koraVipMembership";
 	private $conn;
 	function __construct(){
@@ -17,7 +17,7 @@ class VipMembership {
 	function getVipMemberDetails($customerId) {
     $sql = "SELECT * FROM vip_members WHERE customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
-    return $result->fetch_row();
+    return $result->fetch_assoc();
   }
   function getVipMemberDetailsByShopifyCustomerId($customerId) {
     $sql = "SELECT * FROM vip_members WHERE shopify_customer_id = '".$customerId."' limit 1";
