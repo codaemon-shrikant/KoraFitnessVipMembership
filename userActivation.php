@@ -25,5 +25,5 @@ else
 	echo "Customer is active";
 }
 
-
 ?>
+

@@ -3,8 +3,8 @@
 class RechargeApi {
 
 	private $rechargeBaseURL = "https://api.rechargeapps.com/";
-	//private $rechargeToken = "a8cfed1dcbc2394ce19313e3fdb83fc25b69e6b7075f768b6056fddb";
-	private $rechargeToken = "8aa8caed77d15b28c6cc83a75e29a7cf98df6c82b7d657162f768afb";
+	private $rechargeToken = "a8cfed1dcbc2394ce19313e3fdb83fc25b69e6b7075f768b6056fddb";
+	//private $rechargeToken = "8aa8caed77d15b28c6cc83a75e29a7cf98df6c82b7d657162f768afb";
 
 	function createWebhook($topic) {
 		$data = array (
