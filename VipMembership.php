@@ -17,7 +17,7 @@ class VipMembership {
 	function getVipMemberDetails($customerId) {
     $sql = "SELECT * FROM vip_members WHERE customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
-    return $result->fetch_assoc();
+    return $result->fetch_row();
   }
   function getVipMemberDetailsByShopifyCustomerId($customerId) {
     $sql = "SELECT * FROM vip_members WHERE shopify_customer_id = '".$customerId."' limit 1";
@@ -126,6 +126,15 @@ class VipMembership {
                 "credit_percent" => $creditPercent,
                 "total_discount" => $totalDiscount,
                 "remaining_credit" => round($creditBalance, 2)
+              );
+    $jsonData = json_encode($data);
+    return $jsonData;
+  }
+  function jsonFormatForCreditBalance($creditAmount)
+  {
+    $data = 
+              array(
+                "creditRemaining" => $creditAmount
               );
     $jsonData = json_encode($data);
     return $jsonData;
