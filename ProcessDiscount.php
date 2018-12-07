@@ -30,7 +30,7 @@ header("Access-Control-Allow-Origin: *");
 $order_id = null;
 $defaultDiscountinPercentage = $_GET['default_discount'];
 $cartTotal = $_GET['cart_total']/100;
-$customerId = $_GET['customer_id'];
+$customerId = 14818050092;
 
 //$cartDetails = file_get_contents('php://input');
 
@@ -96,8 +96,11 @@ if($customerId) {
             print_r($jsonFormat);
         }
     } else {
-        $jsonFormat = $vipMembership->jsonFormat(null, 0, 0, $defaultDiscountinPercentage, $creditAmount);
-            print_r($jsonFormat);
+        $creditDiscount = $genrateCoupon->TotalDiscount($defaultDiscountinPercentage, $creditDiscount);
+        $createCoupon =  generateToken($creditDiscount, $customerId);
+        $code = $createCoupon->discount_code->code;
+        $jsonFormat = $vipMembership->jsonFormat($code, 0, 0, $defaultDiscountinPercentage, $creditAmount);
+        print_r($jsonFormat);
     }
 
 } else {
