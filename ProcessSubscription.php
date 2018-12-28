@@ -73,6 +73,26 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 	//$vipMembership->addSubscriptionDetails($subscriptionDetails);
 	$vipMembership->addChargeDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, 0, str_replace("T"," ", $subscriptionDetails->subscription->created_at) , str_replace("T"," ", $subscriptionDetails->subscription->updated_at), "SUCCESS");
 
+	/* add user to to champion subscription list in mailchimp */
+	$data = array (
+        	    "email_address" => $rechargeCustomerDetails->customer->email,
+			    "status"=> "subscribed",
+			    "merge_fields" => array(
+			        "FNAME"=> $rechargeCustomerDetails->customer->first_name,
+			        "LNAME"=> $rechargeCustomerDetails->customer->last_name
+			    	)
+				);
+	$url = 'https://us17.api.mailchimp.com/3.0/lists/77963e01cb/members';
+	$method = "POST";
+	$headers = array(
+	  'Content-Type: application/json',
+	  'Authorization: apikey 0b587992823a0cc7e88932280cc50f60-us17',
+	  "Accept: application/json"
+	);
+	$curl = new CurlCall($url, $method, $headers, $data);
+
+	$result = $curl->execute();
+
 } else {
 	echo "Customer Not Found";
 }
