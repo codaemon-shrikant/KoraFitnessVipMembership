@@ -78,7 +78,10 @@ class ShopifyApi {
             'APIKEY: '.$this->apiKey,
             'Content-Type: application/json',
          );
-       $price_rule = array (
+       
+	$starts_at = date('Y-m-d H:i:s');
+        $ends_at =  date('Y-m-d ') . date('H:i:s', strtotime("+20 minutes",        strtotime($starts_at)));
+	$price_rule = array (
         'price_rule' =>
               array(
                 "title" => $code,
@@ -87,10 +90,12 @@ class ShopifyApi {
                 "allocation_method" => "across",
                 "value_type" => "percentage",
                 "allocation_limit" => 1,
-                "value" => -$totalDiscount,
+                "usage_limit" => 1,
+		"value" => -$totalDiscount,
                 "customer_selection" => "prerequisite",
                 "prerequisite_customer_ids" => [$shopifyCustomerId],
-                "starts_at" => date('Y-m-d h:m:s')
+                "starts_at" => $starts_at,
+                "ends_at" => $ends_at
               )
             );
         return $price_rule;
