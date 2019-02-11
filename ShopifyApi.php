@@ -80,7 +80,7 @@ class ShopifyApi {
          );
        
 	$starts_at = date('Y-m-d H:i:s');
-        $ends_at =  date('Y-m-d ') . date('H:i:s', strtotime("+20 minutes",        strtotime($starts_at)));
+        $ends_at =  date('Y-m-d H:i:s', strtotime("+24 hours"));
 	$price_rule = array (
         'price_rule' =>
               array(
