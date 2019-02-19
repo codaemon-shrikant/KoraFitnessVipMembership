@@ -116,7 +116,7 @@ class VipMembership {
   function insertCoupon($code, $customerId, $totalDiscount, $amount, $pricingRuleId)
   {
 	$starts_at = date('Y-m-d h:i:s');
-    $ends_at =  date('Y-m-d ') . date('h:i:s', strtotime("+20 minutes", strtotime($starts_at)));
+   $ends_at =  date('Y-m-d H:i:s', strtotime("+24 hours"));
     $sql = "INSERT INTO coupon(shopify_customer_id, code, pricing_rule_id, value, credit_used, discount_type, applies_to_product_type, duration, duration_usage_limit, restrict_by_email, status, usage_limit, starts_at, ends_at) VALUES ('".$customerId."', '".$code."','".$pricingRuleId."', '".$totalDiscount."', '".$amount."' , 1 ,'1','1','11','1','1','1','".$starts_at."','".$ends_at."')";
     $result = $this->conn->query($sql);
   }
