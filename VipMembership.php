@@ -14,6 +14,11 @@ class VipMembership {
 		    die("Connection failed" . $this->conn->connect_error);
 		} 
 	}	
+  function getVipMembers() {
+    $sql = "SELECT * FROM vip_members WHERE customer_email = '' || customer_name = '' ";
+    $result = $this->conn->query($sql);
+    return $result;
+  }
 	function getVipMemberDetails($customerId) {
     $sql = "SELECT * FROM vip_members WHERE customer_id = '".$customerId."' limit 1";
     $result = $this->conn->query($sql);
@@ -57,9 +62,10 @@ class VipMembership {
        $result = $this->conn->query($sql);
        return $result;
      }
-	function addVipMemberDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $credit) {
-		$sql = "INSERT INTO vip_members(customer_id, shopify_customer_id, subscription_id, next_charge_scheduled_at, status, credit_amount) VALUES ('".$customerId."', '".$shopifyCustomerId."', '".$subscriptionId."', '".$nextChargeDate."', 1 , '".$credit."')";
-    $result = $this->conn->query($sql); 	}
+	function addVipMemberDetails($customerId, $email, $customer_name, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $credit) {
+		$sql = "INSERT INTO vip_members(customer_id, customer_email, customer_name,shopify_customer_id, subscription_id, next_charge_scheduled_at, status, credit_amount) VALUES ('".$customerId."','".$email."','".$customer_name."', '".$shopifyCustomerId."', '".$subscriptionId."', '".$nextChargeDate."', 1 , '".$credit."')";
+    $result = $this->conn->query($sql); 	
+  }
 
  	function updateVipMemberDetails($customerId, $nextChargeDate, $credit, $status) {
  		$sql = "UPDATE vip_members SET next_charge_scheduled_at = '".$nextChargeDate."', status = '".$status."', credit_amount = '".$credit."' WHERE customer_id = '".$customerId."'";
@@ -166,6 +172,17 @@ class VipMembership {
     $result = $this->conn->query($sql);
     $data = $result->fetch_assoc();
     return $data['credit_used'];
+  }
+  function updateCustomerDetails($shopifyCustomerDetails)
+  {
+    $customerId = $shopifyCustomerDetails->customer->id;
+    $customer_name =   $shopifyCustomerDetails->customer->first_name. ' ' . $shopifyCustomerDetails->customer->last_name;
+
+    $sql = "UPDATE vip_members SET  customer_email = '".$shopifyCustomerDetails->customer->email."', 
+                                    customer_name = '".$customer_name."' 
+                                    WHERE shopify_customer_id = '".$customerId."'";
+
+    $result = $this->conn->query($sql);
   }
 
 }
