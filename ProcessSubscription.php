@@ -56,8 +56,18 @@ if($rechargeCustomerDetails->customer->shopify_customer_id) {
 		$creditAmount += $vipMemberDetails['credit_amount'];
 		$vipMembership->updateVipMemberDetails($customerId, $nextChargeDate, $creditAmount, 1);
     } else {
-    	
-    	$vipMembership->addVipMemberDetails($customerId, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $creditAmount);
+    	// Add customer Details to the vip_member
+		$addCustomerDetails = array(
+	            'customer' =>
+	                array(
+	                   'email' => $shopifyCustomerDetails->customer->email,
+	                   'customer_name' => $shopifyCustomerDetails->customer->first_name. ' ' . $shopifyCustomerDetails->customer->last_name,
+	                )
+	        );
+    	$email = $addCustomerDetails['customer']['email'];
+		$customer_name = $addCustomerDetails['customer']['customer_name'];
+    	$vipMembership->addVipMemberDetails($customerId, $email, $customer_name, $shopifyCustomerId, $subscriptionId, $nextChargeDate, $creditAmount);
+
 	    // Set VIP tag to the customer
 		$customerDetailsToUpdate = array(
 	            'customer' =>
